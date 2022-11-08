@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-part 'main.freezed.dart';
+import 'package:memo_app/provider/counter_provider.dart';
 
 void main() {
   runApp(
@@ -63,21 +61,3 @@ class MyHomePage extends HookConsumerWidget {
     );
   }
 }
-
-@freezed
-class Counter with _$Counter {
-  const factory Counter({
-    required int count,
-  }) = _Counter;
-}
-
-class CounterModel extends StateNotifier<Counter> {
-  CounterModel() : super(const Counter(count: 0));
-
-  incrementCounter() {
-    state = state.copyWith(count: state.count + 1);
-  }
-}
-
-final counterProvider =
-    StateNotifierProvider<CounterModel, Counter>((ref) => CounterModel());
