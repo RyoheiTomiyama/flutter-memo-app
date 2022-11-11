@@ -41,6 +41,8 @@ dependencies:
   freezed_annotation: ^2.2.0
   # super_editor入れるのに、freezed@2.2.0, build_runner@2.3.0に下げないとversion solving failed
   super_editor: ^0.2.3+1
+  logging: ^1.1.0
+  dropdown_button2: ^1.8.9
 
 dev_dependencies:
   flutter_test:

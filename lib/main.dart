@@ -3,7 +3,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memo_app/routes.dart';
 
+import 'package:logging/logging.dart' as logging;
+
 void main() {
+  logging.Logger.root.level = logging.Level.ALL;
   runApp(
     const ProviderScope(child: MyApp()),
   );
