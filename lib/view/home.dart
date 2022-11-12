@@ -25,8 +25,8 @@ class Home extends HookConsumerWidget {
       ),
       body: Stack(
         children: [
-          // MyEditor(),
-          Editor(),
+          MyEditor(),
+          // Editor(),
         ],
       ),
 
