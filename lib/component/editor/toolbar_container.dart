@@ -109,9 +109,18 @@ class ToolbarContainer extends HookWidget {
     }, []);
     useEffect(() {
       editorScrollController.addListener(editorScrollControllerListener);
-      return () =>
-          editorScrollController.removeListener(editorScrollControllerListener);
+      return () {
+        editorScrollController.removeListener(editorScrollControllerListener);
+      };
     });
+
+    // selectionが画面外にスクロールされたとき、ツールバーを非表示にする
+    final isVisible = position.value != null &&
+        anchor.value != null &&
+        (((position.value! - anchor.value!).dy +
+                    (toolbarBox.value?.size.height ?? 0))
+                .abs() <
+            100);
 
     return Stack(
       key: stackKey,
@@ -122,7 +131,7 @@ class ToolbarContainer extends HookWidget {
           left: position.value?.dx,
           top: position.value?.dy,
           child: AnimatedOpacity(
-            opacity: position.value == null ? 0 : 1,
+            opacity: !isVisible ? 0 : 1,
             duration: const Duration(milliseconds: 100),
             child: Toolbar(),
           ),

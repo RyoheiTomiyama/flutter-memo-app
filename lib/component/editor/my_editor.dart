@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:memo_app/component/editor/initial_document.dart';
 import 'package:memo_app/component/editor/my_toolbar.dart';
 import 'package:memo_app/component/editor/toolbar_container.dart';
+import 'package:memo_app/component/editor/toolbar_visible.dart';
 import 'package:super_editor/super_editor.dart';
 
 class MyEditor extends HookWidget {
@@ -74,9 +75,9 @@ class MyEditor extends HookWidget {
     }
 
     composer.value.selectionNotifier.addListener(watchSelection);
-    scrollController.addListener(() => print('scroll'));
-    editorFocus.addListener(
-        () => print('f: ${editorFocus.hasFocus} ${composer.value.selection}'));
+    // scrollController.addListener(() => print('scroll'));
+    // editorFocus.addListener(
+    //     () => print('f: ${editorFocus.hasFocus} ${composer.value.selection}'));
     return Stack(
       children: [
         SuperEditor(
@@ -90,11 +91,16 @@ class MyEditor extends HookWidget {
         ),
         if (!selection.value.isCollapsed &&
             _docLayoutKey.currentContext != null)
-          ToolbarContainer(
+          ToolbarVisible(
+            document: doc.value,
             selection: selection.value,
-            docLayoutKey: _docLayoutKey,
-            editorScrollController: scrollController,
+            child: ToolbarContainer(
+              selection: selection.value,
+              docLayoutKey: _docLayoutKey,
+              editorScrollController: scrollController,
+            ),
           ),
+
         // SafeArea(
         //   child: MyToolbar(
         //     anchor: anchor.value,
