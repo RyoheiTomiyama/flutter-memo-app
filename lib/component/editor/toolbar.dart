@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:super_editor/super_editor.dart';
@@ -14,11 +16,11 @@ extension NodeTextTypeExt on NodeTextType {
   String get label {
     switch (this) {
       case NodeTextType.header1:
-        return 'Header1';
+        return 'Heading1';
       case NodeTextType.header2:
-        return 'Header2';
+        return 'Heading2';
       case NodeTextType.header3:
-        return 'Header3';
+        return 'Heading3';
       case NodeTextType.paragraph:
         return 'Text';
       case NodeTextType.blockquote:
@@ -162,10 +164,81 @@ class Toolbar extends HookWidget {
     }
   }
 
+  // 選択範囲のテキストスタイルSpan取得
+  Set<AttributionSpan> getSelectedAttributedSpans(
+    DocumentNode selectedNode, {
+    List<Type>? filterAttributions,
+  }) {
+    if (selection.base.nodePosition is! TextPosition ||
+        selection.extent.nodePosition is! TextPosition) {
+      return <AttributionSpan>{};
+    }
+    final baseOffset = (selection.base.nodePosition as TextPosition).offset;
+    final extentOffset = (selection.extent.nodePosition as TextPosition).offset;
+    final selectionStart = min(baseOffset, extentOffset);
+    final selectionEnd = max(baseOffset, extentOffset);
+    final selectionRange = SpanRange(
+      start: selectionStart,
+      end: selectionEnd - 1,
+    );
+
+    if (selectedNode is TextNode) {
+      final text = selectedNode.text;
+
+      final attributedSpans = text.getAttributionSpansInRange(
+        // attributionFilter: (_) => true,
+        attributionFilter: (Attribution attribution) {
+          if (filterAttributions != null) {
+            return filterAttributions.contains(attribution.runtimeType);
+          }
+          return true;
+        },
+        range: selectionRange,
+      );
+      // print(attributedSpans);
+      return attributedSpans;
+    }
+    return <AttributionSpan>{};
+  }
+
+  // 選択範囲のスタイル確認
+  bool isSelectedNamedAttrbution(DocumentNode? node, NodeStyle type) {
+    if (node == null) {
+      return false;
+    }
+    final spans = getSelectedAttributedSpans(node);
+    return spans.any((span) => span.attribution == type.attribution);
+  }
+
   Widget buildVerticalDivider() {
     return Container(
       width: 1,
       color: Colors.grey.shade300,
+    );
+  }
+
+  Widget buildNodeStyleButton({
+    required void Function()? onPressed,
+    required BuildContext context,
+    required NodeStyle nodeStyle,
+    DocumentNode? selectedNode,
+  }) {
+    final setButtonColor = useCallback((bool active) {
+      return active
+          ? Theme.of(context).primaryColor
+          : IconTheme.of(context).color;
+    }, []);
+
+    return Center(
+      child: IconButton(
+        onPressed: onPressed,
+        color: setButtonColor(
+          isSelectedNamedAttrbution(selectedNode, nodeStyle),
+        ),
+        icon: Icon(nodeStyle.icon),
+        splashRadius: 16,
+        tooltip: nodeStyle.label,
+      ),
     );
   }
 
@@ -257,49 +330,29 @@ class Toolbar extends HookWidget {
               ),
               buildVerticalDivider(),
             ],
-            Center(
-              child: IconButton(
-                onPressed: () {
-                  toggleStyle(NodeStyle.bold.attribution);
-                  // editorFocus.requestFocus();
-                },
-                icon: Icon(NodeStyle.bold.icon),
-                splashRadius: 16,
-                tooltip: NodeStyle.bold.label,
-              ),
+            buildNodeStyleButton(
+              context: context,
+              nodeStyle: NodeStyle.bold,
+              onPressed: () => toggleStyle(NodeStyle.bold.attribution),
+              selectedNode: selectedNode.value,
             ),
-            Center(
-              child: IconButton(
-                onPressed: () {
-                  toggleStyle(NodeStyle.italic.attribution);
-                  // editorFocus.requestFocus();
-                },
-                icon: Icon(NodeStyle.italic.icon),
-                splashRadius: 16,
-                tooltip: NodeStyle.italic.label,
-              ),
+            buildNodeStyleButton(
+              context: context,
+              nodeStyle: NodeStyle.italic,
+              onPressed: () => toggleStyle(NodeStyle.italic.attribution),
+              selectedNode: selectedNode.value,
             ),
-            Center(
-              child: IconButton(
-                onPressed: () {
-                  toggleStyle(NodeStyle.underline.attribution);
-                  // editorFocus.requestFocus();
-                },
-                icon: Icon(NodeStyle.underline.icon),
-                splashRadius: 16,
-                tooltip: NodeStyle.underline.label,
-              ),
+            buildNodeStyleButton(
+              context: context,
+              nodeStyle: NodeStyle.underline,
+              onPressed: () => toggleStyle(NodeStyle.underline.attribution),
+              selectedNode: selectedNode.value,
             ),
-            Center(
-              child: IconButton(
-                onPressed: () {
-                  toggleStyle(NodeStyle.strike.attribution);
-                  // editorFocus.requestFocus();
-                },
-                icon: Icon(NodeStyle.strike.icon),
-                splashRadius: 16,
-                tooltip: NodeStyle.strike.label,
-              ),
+            buildNodeStyleButton(
+              context: context,
+              nodeStyle: NodeStyle.strike,
+              onPressed: () => toggleStyle(NodeStyle.strike.attribution),
+              selectedNode: selectedNode.value,
             ),
             // Center(
             //   child: IconButton(
