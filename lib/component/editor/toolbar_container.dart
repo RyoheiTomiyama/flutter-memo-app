@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:memo_app/component/editor/toolbar.dart';
 import 'package:super_editor/super_editor.dart';
 
 class ToolbarContainer extends HookWidget {
@@ -10,12 +9,14 @@ class ToolbarContainer extends HookWidget {
     required this.selection,
     required this.docLayoutKey,
     required this.editorScrollController,
+    required this.isMobile,
   });
 
   final Widget? child;
   final DocumentSelection selection;
   final GlobalKey docLayoutKey;
   final ScrollController editorScrollController;
+  final bool isMobile;
 
   // 選択範囲のtopCenterの位置を取得
   Offset? calcAnchor(RenderBox stackBox) {
@@ -100,6 +101,7 @@ class ToolbarContainer extends HookWidget {
           }
         }
       });
+      return null;
     });
 
     // スクロールされたらanchorを再計算
@@ -116,25 +118,54 @@ class ToolbarContainer extends HookWidget {
     });
 
     // selectionが画面外にスクロールされたとき、ツールバーを非表示にする
-    final isVisible = position.value != null &&
-        anchor.value != null &&
-        (((position.value! - anchor.value!).dy +
-                    (toolbarBox.value?.size.height ?? 0))
-                .abs() <
-            100);
+    // final isVisible = true;
+    final isVisible = useMemoized(
+      () {
+        return position.value != null &&
+            anchor.value != null &&
+            (((position.value! - anchor.value!).dy +
+                        (toolbarBox.value?.size.height ?? 0))
+                    .abs() <
+                100);
+      },
+      [
+        position.value,
+        anchor.value,
+        toolbarBox.value?.size.height,
+      ],
+    );
+
+    buildPositioned({required Widget child}) {
+      if (isMobile) {
+        return Positioned(
+          key: toolbarKey,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: child,
+        );
+      }
+      return Positioned(
+        key: toolbarKey,
+        left: position.value?.dx,
+        top: position.value?.dy,
+        child: child,
+      );
+    }
 
     return Stack(
       key: stackKey,
-      // fit: StackFit.expand,
       children: [
-        Positioned(
-          key: toolbarKey,
-          left: position.value?.dx,
-          top: position.value?.dy,
+        buildPositioned(
           child: AnimatedOpacity(
-            opacity: !isVisible ? 0 : 1,
+            opacity: !isVisible ? 0.0 : 1.0,
+            alwaysIncludeSemantics: true,
             duration: const Duration(milliseconds: 100),
-            child: child,
+            child: IgnorePointer(
+              ignoring: !isVisible,
+              ignoringSemantics: true,
+              child: child,
+            ),
           ),
         ),
       ],

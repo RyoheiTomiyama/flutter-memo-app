@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:memo_app/domain/enum/editor/editor_entity.dart';
@@ -17,12 +18,16 @@ class Toolbar extends HookWidget {
     required this.editorFocus,
     required this.selection,
     required this.composer,
+    required this.isMobile,
+    required this.onCloseKeyboard,
   });
 
   final DocumentEditor editor;
   final FocusNode editorFocus;
   final DocumentSelection selection;
   final DocumentComposer composer;
+  final bool isMobile;
+  final void Function() onCloseKeyboard;
 
   DocumentNode? getSelectedNode(DocumentEditor editor) {
     final node = editor.document.getNodeById(selection.extent.nodeId);
@@ -211,6 +216,13 @@ class Toolbar extends HookWidget {
       }
     }, [editor, selectedNode.value]);
 
+    // Dropdownを選択せず閉じたときにエディタにフォーカスを戻すことでキーボードを表示させる
+    final handleBlockDropdownStateChange = useCallback((isOpen) {
+      if (!isOpen) {
+        editorFocus.requestFocus();
+      }
+    }, []);
+
     // Mutableな値のせいでHooksがうまく作用しないため
     final updateData = useCallback(() {
       selectedNode.value = getSelectedNode(editor);
@@ -225,142 +237,190 @@ class Toolbar extends HookWidget {
 
     return Material(
       // key: toolbarKey,
-      shape: const StadiumBorder(),
+      shape: isMobile ? null : const StadiumBorder(),
       elevation: 5,
       clipBehavior: Clip.hardEdge,
-      child: SizedBox(
-        height: 40,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Only allow the user to select a new type of text node if
-            // the currently selected node can be converted.
-            if (isConvertibleNode) ...[
-              Tooltip(
-                message: 'Turn Into',
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: DropdownButton<Enum>(
-                    value: getSelectedNodeType(selectedNode.value)
-                                is NodeTextType ||
-                            getSelectedNodeType(selectedNode.value)
-                                is NodeListType
-                        ? getSelectedNodeType(selectedNode.value)
-                        : NodeTextType.paragraph,
-                    items: [...NodeTextType.values, ...NodeListType.values]
-                        .map((textType) {
-                      if (textType is NodeTextType) {
-                        return DropdownMenuItem<NodeTextType>(
-                          value: textType,
-                          child: Text(textType.label),
-                        );
-                      }
-                      if (textType is NodeListType) {
-                        return DropdownMenuItem(
-                          value: textType,
-                          child: Text(textType.label),
-                        );
-                      }
-                      return DropdownMenuItem(
-                        value: textType,
-                        child: Text(textType.name),
-                      );
-                    }).toList(),
-                    icon: const Icon(Icons.arrow_drop_down),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                    ),
+      child: SafeArea(
+        child: SizedBox(
+          height: 40,
+          child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        if (isConvertibleNode) ...[
+                          Tooltip(
+                            message: 'Turn Into',
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: DropdownButton2<Enum>(
+                                value: getSelectedNodeType(selectedNode.value)
+                                            is NodeTextType ||
+                                        getSelectedNodeType(selectedNode.value)
+                                            is NodeListType
+                                    ? getSelectedNodeType(selectedNode.value)
+                                    : NodeTextType.paragraph,
+                                items: [
+                                  ...NodeTextType.values,
+                                  ...NodeListType.values
+                                ].map((textType) {
+                                  if (textType is NodeTextType) {
+                                    return DropdownMenuItem<NodeTextType>(
+                                      value: textType,
+                                      child: Text(textType.label),
+                                    );
+                                  }
+                                  if (textType is NodeListType) {
+                                    return DropdownMenuItem(
+                                      value: textType,
+                                      child: Text(textType.label),
+                                    );
+                                  }
+                                  return DropdownMenuItem(
+                                    value: textType,
+                                    child: Text(textType.name),
+                                  );
+                                }).toList(),
+                                icon: const Icon(Icons.arrow_drop_down),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
 
-                    underline: const SizedBox(),
-                    // elevation: 8,
-                    // itemHeight: 48,
-                    onChanged: handleBlockChange,
+                                underline: const SizedBox(),
+                                // elevation: 8,
+                                // itemHeight: 48,
+                                onChanged: handleBlockChange,
+                                onMenuStateChange:
+                                    handleBlockDropdownStateChange,
+                              ),
+                            ),
+                          ),
+                          buildVerticalDivider(),
+                        ],
+                        buildNodeStyleButton(
+                          context: context,
+                          nodeStyle: NodeStyle.bold,
+                          onPressed: () =>
+                              toggleStyle(NodeStyle.bold.attribution),
+                          selectedNode: selectedNode.value,
+                        ),
+                        buildNodeStyleButton(
+                          context: context,
+                          nodeStyle: NodeStyle.italic,
+                          onPressed: () =>
+                              toggleStyle(NodeStyle.italic.attribution),
+                          selectedNode: selectedNode.value,
+                        ),
+                        buildNodeStyleButton(
+                          context: context,
+                          nodeStyle: NodeStyle.underline,
+                          onPressed: () =>
+                              toggleStyle(NodeStyle.underline.attribution),
+                          selectedNode: selectedNode.value,
+                        ),
+                        buildNodeStyleButton(
+                          context: context,
+                          nodeStyle: NodeStyle.strike,
+                          onPressed: () =>
+                              toggleStyle(NodeStyle.strike.attribution),
+                          selectedNode: selectedNode.value,
+                        ),
+                        buildNodeStyleButton(
+                          context: context,
+                          nodeStyle: NodeStyle.strike,
+                          onPressed: () =>
+                              toggleStyle(NodeStyle.strike.attribution),
+                          selectedNode: selectedNode.value,
+                        ),
+                        buildNodeStyleButton(
+                          context: context,
+                          nodeStyle: NodeStyle.strike,
+                          onPressed: () =>
+                              toggleStyle(NodeStyle.strike.attribution),
+                          selectedNode: selectedNode.value,
+                        ),
+                        buildNodeStyleButton(
+                          context: context,
+                          nodeStyle: NodeStyle.strike,
+                          onPressed: () =>
+                              toggleStyle(NodeStyle.strike.attribution),
+                          selectedNode: selectedNode.value,
+                        ),
+                        // Center(
+                        //   child: IconButton(
+                        //     onPressed: _areMultipleLinksSelected() ? null : _onLinkPressed,
+                        //     icon: const Icon(Icons.link),
+                        //     color: _isSingleLinkSelected()
+                        //         ? const Color(0xFF007AFF)
+                        //         : IconTheme.of(context).color,
+                        //     splashRadius: 16,
+                        //     tooltip: 'Link',
+                        //   ),
+                        // ),
+                        // // Only display alignment controls if the currently selected text
+                        // // node respects alignment. List items, for example, do not.
+                        // if (_isTextAlignable()) ...[
+                        //   _buildVerticalDivider(),
+                        //   Tooltip(
+                        //     message: 'Alignment',
+                        //     child: DropdownButton<TextAlign>(
+                        //       value: _getCurrentTextAlignment(),
+                        //       items: [
+                        //         TextAlign.left,
+                        //         TextAlign.center,
+                        //         TextAlign.right,
+                        //         TextAlign.justify
+                        //       ]
+                        //           .map((textAlign) => DropdownMenuItem<TextAlign>(
+                        //                 value: textAlign,
+                        //                 child: Padding(
+                        //                   padding: const EdgeInsets.only(left: 8.0),
+                        //                   child: Icon(_buildTextAlignIcon(textAlign)),
+                        //                 ),
+                        //               ))
+                        //           .toList(),
+                        //       icon: const Icon(Icons.arrow_drop_down),
+                        //       style: const NodeStyle(
+                        //         color: Colors.black,
+                        //         fontSize: 12,
+                        //       ),
+                        //       underline: const SizedBox(),
+                        //       elevation: 0,
+                        //       itemHeight: 48,
+                        //       onChanged: _changeAlignment,
+                        //     ),
+                        //   ),
+                        // ],
+                        // _buildVerticalDivider(),
+                        // Center(
+                        //   child: IconButton(
+                        //     onPressed: () {},
+                        //     icon: const Icon(Icons.more_vert),
+                        //     splashRadius: 16,
+                        //     tooltip: 'More',
+                        //   ),
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              buildVerticalDivider(),
-            ],
-            buildNodeStyleButton(
-              context: context,
-              nodeStyle: NodeStyle.bold,
-              onPressed: () => toggleStyle(NodeStyle.bold.attribution),
-              selectedNode: selectedNode.value,
-            ),
-            buildNodeStyleButton(
-              context: context,
-              nodeStyle: NodeStyle.italic,
-              onPressed: () => toggleStyle(NodeStyle.italic.attribution),
-              selectedNode: selectedNode.value,
-            ),
-            buildNodeStyleButton(
-              context: context,
-              nodeStyle: NodeStyle.underline,
-              onPressed: () => toggleStyle(NodeStyle.underline.attribution),
-              selectedNode: selectedNode.value,
-            ),
-            buildNodeStyleButton(
-              context: context,
-              nodeStyle: NodeStyle.strike,
-              onPressed: () => toggleStyle(NodeStyle.strike.attribution),
-              selectedNode: selectedNode.value,
-            ),
-            // Center(
-            //   child: IconButton(
-            //     onPressed: _areMultipleLinksSelected() ? null : _onLinkPressed,
-            //     icon: const Icon(Icons.link),
-            //     color: _isSingleLinkSelected()
-            //         ? const Color(0xFF007AFF)
-            //         : IconTheme.of(context).color,
-            //     splashRadius: 16,
-            //     tooltip: 'Link',
-            //   ),
-            // ),
-            // // Only display alignment controls if the currently selected text
-            // // node respects alignment. List items, for example, do not.
-            // if (_isTextAlignable()) ...[
-            //   _buildVerticalDivider(),
-            //   Tooltip(
-            //     message: 'Alignment',
-            //     child: DropdownButton<TextAlign>(
-            //       value: _getCurrentTextAlignment(),
-            //       items: [
-            //         TextAlign.left,
-            //         TextAlign.center,
-            //         TextAlign.right,
-            //         TextAlign.justify
-            //       ]
-            //           .map((textAlign) => DropdownMenuItem<TextAlign>(
-            //                 value: textAlign,
-            //                 child: Padding(
-            //                   padding: const EdgeInsets.only(left: 8.0),
-            //                   child: Icon(_buildTextAlignIcon(textAlign)),
-            //                 ),
-            //               ))
-            //           .toList(),
-            //       icon: const Icon(Icons.arrow_drop_down),
-            //       style: const NodeStyle(
-            //         color: Colors.black,
-            //         fontSize: 12,
-            //       ),
-            //       underline: const SizedBox(),
-            //       elevation: 0,
-            //       itemHeight: 48,
-            //       onChanged: _changeAlignment,
-            //     ),
-            //   ),
-            // ],
-            // _buildVerticalDivider(),
-            // Center(
-            //   child: IconButton(
-            //     onPressed: () {},
-            //     icon: const Icon(Icons.more_vert),
-            //     splashRadius: 16,
-            //     tooltip: 'More',
-            //   ),
-            // ),
-          ],
+                if (isMobile) ...[
+                  buildVerticalDivider(),
+                  Center(
+                    child: IconButton(
+                      onPressed: onCloseKeyboard,
+                      icon: const Icon(Icons.keyboard_hide),
+                      splashRadius: 16,
+                      tooltip: 'close',
+                    ),
+                  ),
+                ],
+              ]),
         ),
       ),
     );
