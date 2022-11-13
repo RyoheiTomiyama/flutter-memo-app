@@ -155,13 +155,61 @@ class Toolbar extends HookWidget {
     }, [editor, selection]);
 
     // Heading, paragraph, quote ブロック適用
-    final setTextType = useCallback((NamedAttribution attribution) {
-      if (selectedNode.value is ParagraphNode) {
-        selectedNode.value!.putMetadataValue('blockType', attribution);
+    final setTextType = useCallback((NodeTextType type) {
+      if (selectedNode.value != null) {
+        final currentType = getSelectedNodeType(selectedNode.value);
+        if (currentType is NodeListType) {
+          editor.executeCommand(
+            ConvertListItemToParagraphCommand(
+              nodeId: selectedNode.value!.id,
+              paragraphMetadata: {
+                'blockType': type.attribution,
+              },
+            ),
+          );
+        } else {
+          selectedNode.value!.putMetadataValue('blockType', type.attribution);
+        }
         // composer.selection = selection;
         editorFocus.requestFocus();
       }
-    }, [editor, selection]);
+    }, [editor, selectedNode.value]);
+
+    // List ブロック適用
+    final setListType = useCallback((NodeListType listType) {
+      if (selectedNode.value != null) {
+        final currentType = getSelectedNodeType(selectedNode.value);
+        if (currentType is NodeListType) {
+          editor.executeCommand(
+            ChangeListItemTypeCommand(
+              nodeId: selectedNode.value!.id,
+              newType: listType.itemType,
+            ),
+          );
+        } else {
+          editor.executeCommand(
+            ConvertParagraphToListItemCommand(
+              nodeId: selectedNode.value!.id,
+              type: listType.itemType,
+            ),
+          );
+        }
+        editorFocus.requestFocus();
+      }
+    }, [editor, selectedNode.value]);
+
+    final handleBlockChange = useCallback((Enum? newType) {
+      final currentType = getSelectedNodeType(selectedNode.value);
+      if (currentType == newType) {
+        return;
+      }
+
+      if (newType is NodeTextType) {
+        setTextType(newType);
+      } else if (newType is NodeListType) {
+        setListType(newType);
+      }
+    }, [editor, selectedNode.value]);
 
     // Mutableな値のせいでHooksがうまく作用しないため
     final updateData = useCallback(() {
@@ -193,17 +241,32 @@ class Toolbar extends HookWidget {
                 message: 'Turn Into',
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16.0),
-                  child: DropdownButton<NodeTextType>(
-                    value:
-                        getSelectedNodeType(selectedNode.value) is NodeTextType
-                            ? getSelectedNodeType(selectedNode.value)
-                            : NodeTextType.paragraph,
-                    items: NodeTextType.values
-                        .map((textType) => DropdownMenuItem<NodeTextType>(
-                              value: textType,
-                              child: Text(textType.label),
-                            ))
-                        .toList(),
+                  child: DropdownButton<Enum>(
+                    value: getSelectedNodeType(selectedNode.value)
+                                is NodeTextType ||
+                            getSelectedNodeType(selectedNode.value)
+                                is NodeListType
+                        ? getSelectedNodeType(selectedNode.value)
+                        : NodeTextType.paragraph,
+                    items: [...NodeTextType.values, ...NodeListType.values]
+                        .map((textType) {
+                      if (textType is NodeTextType) {
+                        return DropdownMenuItem<NodeTextType>(
+                          value: textType,
+                          child: Text(textType.label),
+                        );
+                      }
+                      if (textType is NodeListType) {
+                        return DropdownMenuItem(
+                          value: textType,
+                          child: Text(textType.label),
+                        );
+                      }
+                      return DropdownMenuItem(
+                        value: textType,
+                        child: Text(textType.name),
+                      );
+                    }).toList(),
                     icon: const Icon(Icons.arrow_drop_down),
                     style: const TextStyle(
                       color: Colors.black,
@@ -213,11 +276,7 @@ class Toolbar extends HookWidget {
                     underline: const SizedBox(),
                     // elevation: 8,
                     // itemHeight: 48,
-                    onChanged: (textType) {
-                      if (textType != null) {
-                        setTextType(textType.attribution);
-                      }
-                    },
+                    onChanged: handleBlockChange,
                   ),
                 ),
               ),

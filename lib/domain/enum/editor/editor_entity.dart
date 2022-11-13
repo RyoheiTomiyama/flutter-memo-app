@@ -33,8 +33,6 @@ extension NodeTextTypeExt on NodeTextType {
         return header2Attribution;
       case NodeTextType.header3:
         return header3Attribution;
-      // case NodeTextType.paragraph:
-      //   return paragraph;
       case NodeTextType.blockquote:
         return blockquoteAttribution;
       case NodeTextType.paragraph:
@@ -55,6 +53,15 @@ extension NodeListTypeExt on NodeListType {
         return 'Numbered List';
       case NodeListType.unorderedListItem:
         return 'Bulleted List';
+    }
+  }
+
+  ListItemType get itemType {
+    switch (this) {
+      case NodeListType.orderedListItem:
+        return ListItemType.ordered;
+      case NodeListType.unorderedListItem:
+        return ListItemType.unordered;
     }
   }
 }
