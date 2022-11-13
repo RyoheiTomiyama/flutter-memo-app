@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:memo_app/component/editor/toolbar.dart';
 import 'package:super_editor/super_editor.dart';
-
-import 'my_toolbar.dart';
 
 class ToolbarContainer extends HookWidget {
   const ToolbarContainer({
     super.key,
+    this.child,
     required this.selection,
     required this.docLayoutKey,
     required this.editorScrollController,
   });
 
+  final Widget? child;
   final DocumentSelection selection;
   final GlobalKey docLayoutKey;
   final ScrollController editorScrollController;
@@ -133,7 +134,7 @@ class ToolbarContainer extends HookWidget {
           child: AnimatedOpacity(
             opacity: !isVisible ? 0 : 1,
             duration: const Duration(milliseconds: 100),
-            child: Toolbar(),
+            child: child,
           ),
         ),
       ],

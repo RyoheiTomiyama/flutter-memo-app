@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:logging/logging.dart';
 import 'package:memo_app/component/editor/initial_document.dart';
-import 'package:memo_app/component/editor/my_toolbar.dart';
+import 'package:memo_app/component/editor/toolbar.dart';
 import 'package:memo_app/component/editor/toolbar_container.dart';
 import 'package:memo_app/component/editor/toolbar_visible.dart';
 import 'package:super_editor/super_editor.dart';
@@ -21,6 +18,8 @@ class MyEditor extends HookWidget {
     // initLoggers(Level.ALL, {editorStyleLog});
     final editorFocus = useFocusNode(debugLabel: 'editorFocus');
     final doc = useRef(createInitialDocument());
+    final editor =
+        useState(DocumentEditor(document: doc.value as MutableDocument));
     final scrollController = useScrollController();
     final selection = useState(DocumentSelection.collapsed(
       position: DocumentPosition(
@@ -32,14 +31,14 @@ class MyEditor extends HookWidget {
 
     final visibleToolbar = useMemoized(
       () {
-        print(selection.value.isCollapsed);
+        // print(selection.value.isCollapsed);
         return !selection.value.isCollapsed;
       },
       [selection.value.isCollapsed],
     );
 
-    useEffect(
-      () {
+    final calcAnchor = useCallback(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_docLayoutKey.currentState == null || selection.value.isCollapsed) {
           anchor.value = Offset.zero;
           return;
@@ -54,15 +53,26 @@ class MyEditor extends HookWidget {
         );
         // print('change anchor ${overlayBoundingBox.topCenter}');
         anchor.value = overlayBoundingBox.topCenter;
+      });
+    }, [visibleToolbar, selection.value, doc.value]);
+
+    useEffect(
+      () {
+        calcAnchor();
       },
-      [visibleToolbar, selection.value],
+      [visibleToolbar, selection.value, doc.value],
     );
 
-    final editor =
-        useState(DocumentEditor(document: doc.value as MutableDocument));
+    useEffect(() {
+      editor.value.document.addListener(calcAnchor);
+      return () {
+        editor.value.document.removeListener(calcAnchor);
+      };
+    }, [editor.value.document]);
+
     final composer =
         useRef(DocumentComposer(initialSelection: selection.value));
-    useListenableSelector(composer.value, () => composer.value);
+    // useListenableSelector(composer.value, () => composer.value);
 
     watchSelection() {
       if (composer.value.selection == null ||
@@ -70,14 +80,12 @@ class MyEditor extends HookWidget {
               selection.value.extent == composer.value.selection?.extent)) {
         return;
       }
-      print('update selection: ${composer.value.selection.toString()}');
+      print('update selection: ${composer.value.selection?.base.nodePosition}');
       selection.value = composer.value.selection!;
     }
 
     composer.value.selectionNotifier.addListener(watchSelection);
-    // scrollController.addListener(() => print('scroll'));
-    // editorFocus.addListener(
-    //     () => print('f: ${editorFocus.hasFocus} ${composer.value.selection}'));
+
     return Stack(
       children: [
         SuperEditor(
@@ -98,6 +106,12 @@ class MyEditor extends HookWidget {
               selection: selection.value,
               docLayoutKey: _docLayoutKey,
               editorScrollController: scrollController,
+              child: Toolbar(
+                selection: selection.value,
+                editor: editor.value,
+                editorFocus: editorFocus,
+                composer: composer.value,
+              ),
             ),
           ),
 
