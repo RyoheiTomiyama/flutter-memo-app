@@ -238,7 +238,7 @@ class Toolbar extends HookWidget {
     return Material(
       // key: toolbarKey,
       shape: isMobile ? null : const StadiumBorder(),
-      elevation: 5,
+      elevation: isMobile ? 0 : 5,
       clipBehavior: Clip.hardEdge,
       child: SafeArea(
         child: SizedBox(
