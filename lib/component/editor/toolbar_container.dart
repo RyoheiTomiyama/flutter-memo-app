@@ -103,20 +103,18 @@ class ToolbarContainer extends HookWidget {
               stackBox: stackBox.value!,
               toolbarBox: toolbarBox.value!,
             );
-            // print(
-            //     'position: ${position.value} ${anchor.value} ${stackBox.value?.size} ${toolbarBox.value?.size}');
           }
         }
       });
       return null;
-    });
+    }, [stackBox.value, toolbarBox.value, selection]);
 
     // スクロールされたらanchorを再計算
     final editorScrollControllerListener = useCallback(() {
       if (stackBox.value != null && stackBox.value!.size > Size.zero) {
         anchor.value = calcAnchor(stackBox.value!);
       }
-    }, []);
+    }, [stackBox.value, selection]);
     useEffect(() {
       editorScrollController.addListener(editorScrollControllerListener);
       return () {
@@ -128,20 +126,26 @@ class ToolbarContainer extends HookWidget {
     // final isVisible = true;
     final isVisible = useMemoized(
       () {
-        if (position.value == null || anchor.value == null) {
+        if (anchor.value == null || stackBox.value == null) {
           return false;
         }
         if (!isSingleSelection) {
           return false;
         }
-        final distance = (position.value! - anchor.value!).dy;
-        final offset = (toolbarBox.value?.size.height ?? 0) / 2;
-        return (distance + offset).abs() < 100;
+        if (anchor.value!.dy < -100) {
+          return false;
+        }
+        if (anchor.value!.dy > stackBox.value!.size.height + 100) {
+          return false;
+        }
+        return true;
       },
       [
-        position.value,
         anchor.value,
-        toolbarBox.value?.size.height,
+        anchor.value?.dy,
+        isSingleSelection,
+        stackBox.value,
+        stackBox.value?.size.height,
       ],
     );
 
