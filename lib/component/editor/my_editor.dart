@@ -114,27 +114,31 @@ class MyEditor extends HookWidget {
           scrollController: scrollController,
           gestureMode: _gestureMode,
         ),
-        if (selection.value != null &&
-            !(selection.value!.isCollapsed) &&
-            _docLayoutKey.currentContext != null)
+        if (selection.value != null && _docLayoutKey.currentContext != null)
           ToolbarVisible(
             document: doc.value,
             selection: selection.value!,
+            isMobile: _isMobile,
             child: ToolbarContainer(
               selection: selection.value!,
               docLayoutKey: _docLayoutKey,
               editorScrollController: scrollController,
               isMobile: _isMobile,
+              onCloseKeyboard: () {
+                composer.value.selection = null;
+                selection.value = null;
+              },
               child: Toolbar(
-                  selection: selection.value!,
-                  editor: editor.value,
-                  editorFocus: editorFocus,
-                  composer: composer.value,
-                  isMobile: _isMobile,
-                  onCloseKeyboard: () {
-                    composer.value.selection = null;
-                    selection.value = null;
-                  }),
+                selection: selection.value!,
+                editor: editor.value,
+                editorFocus: editorFocus,
+                composer: composer.value,
+                isMobile: _isMobile,
+                onCloseKeyboard: () {
+                  composer.value.selection = null;
+                  selection.value = null;
+                },
+              ),
             ),
           ),
 

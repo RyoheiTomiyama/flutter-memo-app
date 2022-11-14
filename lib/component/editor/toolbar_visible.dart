@@ -9,18 +9,20 @@ class ToolbarVisible extends HookWidget {
     required this.child,
     required this.selection,
     required this.document,
+    this.isMobile = false,
   });
 
   final Widget child;
   final DocumentSelection selection;
   final Document document;
+  final bool isMobile;
 
   bool get isSingleSelection {
     return selection.base.nodeId == selection.extent.nodeId;
   }
 
   bool get isVisible {
-    return isSingleSelection;
+    return isSingleSelection || isMobile;
   }
 
   DocumentNode? get selectedNode {

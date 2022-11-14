@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:memo_app/component/editor/toolbar_keyboard.dart';
 import 'package:super_editor/super_editor.dart';
 
 class ToolbarContainer extends HookWidget {
@@ -10,6 +11,7 @@ class ToolbarContainer extends HookWidget {
     required this.docLayoutKey,
     required this.editorScrollController,
     required this.isMobile,
+    required this.onCloseKeyboard,
   });
 
   final Widget? child;
@@ -17,6 +19,11 @@ class ToolbarContainer extends HookWidget {
   final GlobalKey docLayoutKey;
   final ScrollController editorScrollController;
   final bool isMobile;
+  final void Function() onCloseKeyboard;
+
+  bool get isSingleSelection {
+    return selection.base.nodeId == selection.extent.nodeId;
+  }
 
   // 選択範囲のtopCenterの位置を取得
   Offset? calcAnchor(RenderBox stackBox) {
@@ -121,12 +128,15 @@ class ToolbarContainer extends HookWidget {
     // final isVisible = true;
     final isVisible = useMemoized(
       () {
-        return position.value != null &&
-            anchor.value != null &&
-            (((position.value! - anchor.value!).dy +
-                        (toolbarBox.value?.size.height ?? 0))
-                    .abs() <
-                100);
+        if (position.value == null || anchor.value == null) {
+          return false;
+        }
+        if (!isSingleSelection) {
+          return false;
+        }
+        final distance = (position.value! - anchor.value!).dy;
+        final offset = (toolbarBox.value?.size.height ?? 0) / 2;
+        return (distance + offset).abs() < 100;
       },
       [
         position.value,
@@ -153,20 +163,33 @@ class ToolbarContainer extends HookWidget {
       );
     }
 
+    buildToolbar() {
+      final toolbar = AnimatedOpacity(
+        opacity: !isVisible ? 0.0 : 1.0,
+        alwaysIncludeSemantics: true,
+        duration: const Duration(milliseconds: 100),
+        child: IgnorePointer(
+          ignoring: !isVisible,
+          ignoringSemantics: true,
+          child: child,
+        ),
+      );
+      if (isMobile) {
+        return ToolbarKeyboard(
+          isMobile: isMobile,
+          onCloseKeyboard: onCloseKeyboard,
+          child: toolbar,
+        );
+      }
+      return toolbar;
+    }
+
     return Stack(
       key: stackKey,
+      fit: StackFit.expand,
       children: [
         buildPositioned(
-          child: AnimatedOpacity(
-            opacity: !isVisible ? 0.0 : 1.0,
-            alwaysIncludeSemantics: true,
-            duration: const Duration(milliseconds: 100),
-            child: IgnorePointer(
-              ignoring: !isVisible,
-              ignoringSemantics: true,
-              child: child,
-            ),
-          ),
+          child: buildToolbar(),
         ),
       ],
     );
