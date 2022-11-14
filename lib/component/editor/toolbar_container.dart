@@ -38,6 +38,7 @@ class ToolbarContainer extends HookWidget {
         docBox.localToGlobal(selectionRect.topLeft),
         docBox.localToGlobal(selectionRect.bottomRight),
       );
+      print(stackBox.globalToLocal(globalSelectionRect.topCenter));
       return stackBox.globalToLocal(globalSelectionRect.topCenter);
     }
     return null;
@@ -97,17 +98,27 @@ class ToolbarContainer extends HookWidget {
         toolbarBox.value = findRenderBox(toolbarKey);
         if (stackBox.value != null && stackBox.value!.size > Size.zero) {
           anchor.value = calcAnchor(stackBox.value!);
-          if (anchor.value != null && toolbarBox.value != null) {
-            position.value = calcPosition(
-              anchor: anchor.value!,
-              stackBox: stackBox.value!,
-              toolbarBox: toolbarBox.value!,
-            );
-          }
         }
       });
       return null;
     }, [stackBox.value, toolbarBox.value, selection]);
+
+    useEffect(() {
+      // モバイルでは下部固定なのでposition計算不要
+      if (isMobile) {
+        return;
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (anchor.value != null && toolbarBox.value != null) {
+          position.value = calcPosition(
+            anchor: anchor.value!,
+            stackBox: stackBox.value!,
+            toolbarBox: toolbarBox.value!,
+          );
+        }
+      });
+      return null;
+    }, [anchor.value, toolbarBox.value, stackBox.value]);
 
     // スクロールされたらanchorを再計算
     final editorScrollControllerListener = useCallback(() {
@@ -152,7 +163,6 @@ class ToolbarContainer extends HookWidget {
     buildPositioned({required Widget child}) {
       if (isMobile) {
         return Positioned(
-          key: toolbarKey,
           left: 0,
           right: 0,
           bottom: 0,
@@ -160,7 +170,6 @@ class ToolbarContainer extends HookWidget {
         );
       }
       return Positioned(
-        key: toolbarKey,
         left: position.value?.dx,
         top: position.value?.dy,
         child: child,
@@ -193,7 +202,12 @@ class ToolbarContainer extends HookWidget {
       fit: StackFit.expand,
       children: [
         buildPositioned(
-          child: buildToolbar(),
+          child: Align(
+            child: SizedBox(
+              key: toolbarKey,
+              child: buildToolbar(),
+            ),
+          ),
         ),
       ],
     );

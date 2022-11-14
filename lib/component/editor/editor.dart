@@ -68,11 +68,11 @@ class _ExampleEditorState extends State<Editor> {
   }
 
   void _hideOrShowToolbar() {
-    // if (_gestureMode != DocumentGestureMode.mouse) {
-    //   // We only add our own toolbar when using mouse. On mobile, a bar
-    //   // is rendered for us.
-    //   return;
-    // }
+    if (_gestureMode != DocumentGestureMode.mouse) {
+      // We only add our own toolbar when using mouse. On mobile, a bar
+      // is rendered for us.
+      return;
+    }
 
     final selection = _composer.selection;
     print({'selection': selection});
@@ -187,7 +187,7 @@ class _ExampleEditorState extends State<Editor> {
       // I tried explicitly unfocus()'ing the URL textfield
       // in the toolbar but it didn't return focus to the
       // editor. I'm not sure why.
-      // _editorFocusNode.requestFocus();
+      _editorFocusNode.requestFocus();
     }
   }
 
@@ -287,7 +287,7 @@ class _ExampleEditorState extends State<Editor> {
       _imageFormatBarOverlayEntry = null;
 
       // Ensure that focus returns to the editor.
-      // _editorFocusNode.requestFocus();
+      _editorFocusNode.requestFocus();
     }
   }
 
@@ -300,7 +300,7 @@ class _ExampleEditorState extends State<Editor> {
             Expanded(
               child: _buildEditor(),
             ),
-            _buildMountedToolbar(),
+            if (_isMobile) _buildMountedToolbar(),
           ],
         ),
         Align(
