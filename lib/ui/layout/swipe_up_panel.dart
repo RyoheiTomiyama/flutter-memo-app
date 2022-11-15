@@ -25,10 +25,8 @@ class SwipeUpPanel extends HookWidget {
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: minHeight),
       child: IntrinsicHeight(
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
-          // height: context.size?.height,
-          color: Colors.amber,
           child: body,
         ),
       ),
@@ -42,23 +40,26 @@ class SwipeUpPanel extends HookWidget {
     return Container(
       width: double.infinity,
       height: maxHeight,
-      color: Theme.of(context).primaryColor,
-      child: child ??
-          ListView.builder(
-            primary: false,
-            itemCount: 30,
-            physics: const ClampingScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      child: Column(
+        children: [
+          Center(
+            child: Container(
+              width: 30,
+              height: 3,
+              margin: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
-                child: SizedBox(
-                  height: 100,
-                  child: Text(index.toString()),
-                ),
-              );
-            },
+                borderRadius: BorderRadius.circular(1.5),
+              ),
+            ),
           ),
+          child ?? Container(),
+        ],
+      ),
     );
   }
 
@@ -67,21 +68,68 @@ class SwipeUpPanel extends HookWidget {
     final sc = scrollController ?? useScrollController();
     final drag = useState<Drag?>(null);
 
+    final cancelDrag = useCallback(() {
+      drag.value?.cancel();
+      drag.value = null;
+    }, [drag.value]);
+
+    final scrollTo = useCallback((double to) {
+      const duration = Duration(milliseconds: 300);
+      cancelDrag();
+      sc.position.moveTo(to, duration: duration);
+    }, [sc, cancelDrag]);
+
     return LayoutBuilder(builder: (context, constraints) {
+      // Panelの最大高
       final maxHeight = constraints.maxHeight * maxChildSize;
+      // Panelが展開される高さ
       final borderHeight = constraints.maxHeight * minChildSize;
       return GestureDetector(
         // excludeFromSemantics: true,
         onVerticalDragStart: (details) {
-          print('drag start');
           drag.value = sc.position.drag(details, () {});
         },
         onVerticalDragUpdate: (details) {
-          print(details.delta);
           drag.value?.update(details);
         },
         onVerticalDragEnd: (details) {
-          print(details);
+          // print(details.velocity.pixelsPerSecond.dy);
+          if (sc.position.pixels < borderHeight) {
+            // panelがborderHeightより下にいるとき
+            if (details.velocity.pixelsPerSecond.dy < -6) {
+              // 上スクロール
+              scrollTo(borderHeight);
+              return;
+            }
+            if (details.velocity.pixelsPerSecond.dy > 6) {
+              // 下スクロール
+              scrollTo(0);
+              return;
+            }
+            // panelを閉じるか展開するか
+            if (sc.position.pixels > borderHeight / 2) {
+              scrollTo(borderHeight);
+              return;
+            } else {
+              scrollTo(0);
+              return;
+            }
+          } else {
+            // panelがborderHeightより上にいるとき
+            if (details.velocity.pixelsPerSecond.dy > 10) {
+              // 下スクロール
+
+              // velocityはスクロールの強さ
+              final simulation = ClampingScrollSimulation(
+                position: sc.position.pixels,
+                velocity: -details.velocity.pixelsPerSecond.dy,
+              );
+              if (simulation.x(10) < borderHeight) {
+                // 慣性スクロールの終了地点がboderHeightより下になるとき
+                scrollTo(borderHeight);
+              }
+            }
+          }
           drag.value?.end(details);
           drag.value = null;
         },
