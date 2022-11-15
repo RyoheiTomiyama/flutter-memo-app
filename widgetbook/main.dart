@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memo_app/component/editor/my_editor.dart';
+import 'package:memo_app/ui/layout/swipe_up_panel.dart';
+import 'package:memo_app/ui/layout/scrollable_sheet.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 void main() {
@@ -35,6 +37,45 @@ class HotreloadWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'SuperEditor',
                   builder: (context) => const MyEditor(),
+                ),
+                WidgetbookUseCase(
+                  name: 'ScrollableSheet',
+                  builder: (context) => PageView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      Material(
+                        color: Theme.of(context).errorColor,
+                      ),
+                      Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          const ScrollableSheet(),
+                        ],
+                      ),
+                      SwipeUpPanel(
+                        body: Text('Hello body!'),
+                        child: Text('Hello panel'),
+                      )
+                    ],
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'ScrollableSheet2',
+                  builder: (context) => Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      const ScrollableSheet(),
+                    ],
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'ScrollableBottomSheet',
+                  builder: (context) => const Scaffold(
+                    body: SwipeUpPanel(
+                      body: Text('Hello body!'),
+                      child: Text('Hello panel'),
+                    ),
+                  ),
                 ),
               ],
             ),
