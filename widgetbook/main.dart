@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:memo_app/component/editor/my_editor.dart';
 import 'package:memo_app/ui/layout/swipe_up_panel.dart';
-import 'package:memo_app/ui/layout/scrollable_sheet.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 void main() {
@@ -40,37 +39,7 @@ class HotreloadWidgetbook extends StatelessWidget {
                   builder: (context) => const MyEditor(),
                 ),
                 WidgetbookUseCase(
-                  name: 'ScrollableSheet',
-                  builder: (context) => PageView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      Material(
-                        color: Theme.of(context).errorColor,
-                      ),
-                      Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          const ScrollableSheet(),
-                        ],
-                      ),
-                      SwipeUpPanel(
-                        body: Text('Hello body!'),
-                        child: Text('Hello panel'),
-                      )
-                    ],
-                  ),
-                ),
-                WidgetbookUseCase(
-                  name: 'ScrollableSheet2',
-                  builder: (context) => Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      const ScrollableSheet(),
-                    ],
-                  ),
-                ),
-                WidgetbookUseCase(
-                  name: 'ScrollableBottomSheet',
+                  name: 'SwipeUpPanel',
                   builder: (context) => const Scaffold(
                     backgroundColor: Colors.red,
                     body: SwipeUpPanel(
@@ -79,8 +48,13 @@ class HotreloadWidgetbook extends StatelessWidget {
                     ),
                   ),
                 ),
+              ],
+            ),
+            WidgetbookComponent(
+              name: 'GestureDetector実験',
+              useCases: [
                 WidgetbookUseCase(
-                  name: 'GestureDetectorにイベントが伝播しない例',
+                  name: 'ドラッグイベントが伝播しない通常例',
                   builder: (context) => GestureDetector(
                     onVerticalDragStart: (details) {
                       print('drag start');
@@ -101,7 +75,7 @@ class HotreloadWidgetbook extends StatelessWidget {
                   ),
                 ),
                 WidgetbookUseCase(
-                  name: 'GestureDetectorでスクロールをコントロールしている例',
+                  name: 'スクロールをコントロールしている例',
                   builder: (context) {
                     final scrollController = ScrollController();
                     Drag? drag;
