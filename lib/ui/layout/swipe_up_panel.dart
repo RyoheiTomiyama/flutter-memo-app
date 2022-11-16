@@ -23,13 +23,13 @@ class SwipeUpPanel extends HookWidget {
     required double minHeight,
   }) {
     return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: minHeight),
-      child: IntrinsicHeight(
-        child: SizedBox(
-          width: double.infinity,
-          child: body,
-        ),
+      constraints: BoxConstraints(minHeight: minHeight, maxHeight: minHeight),
+      // child: IntrinsicHeight(
+      child: SizedBox(
+        width: double.infinity,
+        child: body,
       ),
+      // ),
     );
   }
 
