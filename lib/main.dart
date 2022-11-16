@@ -23,7 +23,7 @@ class MyApp extends HookWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/player',
       routes: routes,
     );
   }
