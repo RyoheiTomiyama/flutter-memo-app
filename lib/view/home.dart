@@ -27,6 +27,17 @@ class Home extends HookConsumerWidget {
         children: [
           MyEditor(),
           // Editor(),
+          Column(
+            children: [
+              Container(
+                  color: Theme.of(context).primaryColor, width: 50, height: 50),
+              Container(color: Colors.blueGrey.shade700, width: 50, height: 50),
+              Container(
+                  color: Theme.of(context).primaryColorDark,
+                  width: 50,
+                  height: 50),
+            ],
+          )
         ],
       ),
 
