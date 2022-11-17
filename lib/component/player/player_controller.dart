@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memo_app/component/player/player_seek_controller.dart';
 import 'package:memo_app/provider/player_manager_provider.dart';
 import 'package:memo_app/ui/player/player_controller_layout.dart';
+import 'package:memo_app/ui/player/player_controller_playback.dart';
 
 class PlayerController extends HookConsumerWidget {
   const PlayerController({super.key});
@@ -17,23 +19,20 @@ class PlayerController extends HookConsumerWidget {
     }
 
     final controller = playerManager.controller!;
+    useListenable(controller);
 
     Widget buildHeader() {
       return Container();
     }
 
     Widget buildCenter() {
-      return Container(
-        child: IconButton(
-          color: Colors.grey.shade800,
-          iconSize: 80,
-          icon: const Icon(Icons.play_arrow_rounded),
-          onPressed: () {
-            controller.value.isPlaying
-                ? playerManagerNotifier.pause()
-                : playerManagerNotifier.play();
-          },
-        ),
+      return PlayerControllerPlayback(
+        isPlay: controller.value.isPlaying,
+        onPressed: () {
+          controller.value.isPlaying
+              ? playerManagerNotifier.pause()
+              : playerManagerNotifier.play();
+        },
       );
     }
 
