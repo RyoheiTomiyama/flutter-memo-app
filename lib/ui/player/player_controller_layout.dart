@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class PlayerControllerLayout extends HookWidget {
-  final Widget Function()? buildHeader;
-  final Widget Function()? buildBody;
-  final Widget Function()? buildFooter;
+  final Widget? buildHeader;
+  final Widget? buildBody;
+  final Widget? buildFooter;
   const PlayerControllerLayout({
     super.key,
     this.buildHeader,
@@ -24,7 +24,7 @@ class PlayerControllerLayout extends HookWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (buildHeader != null) buildHeader!(),
+                if (buildHeader != null) buildHeader!,
               ],
             ),
           ),
@@ -33,7 +33,7 @@ class PlayerControllerLayout extends HookWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (buildBody != null) buildBody!(),
+                if (buildBody != null) buildBody!,
               ],
             ),
           ),
@@ -42,7 +42,7 @@ class PlayerControllerLayout extends HookWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (buildFooter != null) buildFooter!(),
+                if (buildFooter != null) buildFooter!,
               ],
             ),
           ),
