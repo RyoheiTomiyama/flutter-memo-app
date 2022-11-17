@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memo_app/ui/layout/swipe_up_panel.dart';
-import 'package:memo_app/ui/player/player.dart';
+import 'package:memo_app/component/player/player.dart';
 import 'package:memo_app/view/about.dart';
 import 'package:memo_app/view/home.dart';
 import 'package:memo_app/view/overlay_dropdown.dart';

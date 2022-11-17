@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:memo_app/component/player/player_controller.dart';
 import 'package:memo_app/hooks/player/video_player_controller_hooks.dart';
-import 'package:memo_app/ui/player/player_controller.dart';
 import 'package:memo_app/ui/player/player_viewer.dart';
 import 'package:video_player/video_player.dart';
 

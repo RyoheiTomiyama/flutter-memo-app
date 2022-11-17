@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:memo_app/ui/player/player_seek_controller.dart';
+import 'package:memo_app/component/player/player_seek_controller.dart';
+import 'package:memo_app/ui/player/player_controller_layout.dart';
 import 'package:video_player/video_player.dart';
 
 class PlayerController extends HookWidget {
   final VideoPlayerController controller;
   const PlayerController({super.key, required this.controller});
 
-  buildHeader() {
+  Widget buildHeader() {
     return Container();
   }
 
-  buildCenter() {
+  Widget buildCenter() {
     return Container(
       child: IconButton(
         color: Colors.grey.shade800,
@@ -24,7 +25,7 @@ class PlayerController extends HookWidget {
     );
   }
 
-  buildFooter() {
+  Widget buildFooter() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: PlayerSeekController(
@@ -35,22 +36,10 @@ class PlayerController extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('render controller');
-    // useListenable(controller);
-
-    return Container(
-      // color: Colors.amber,
-      child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            buildHeader(),
-            buildCenter(),
-            buildFooter(),
-          ],
-        ),
-      ),
+    return PlayerControllerLayout(
+      buildHeader: buildHeader,
+      buildBody: buildCenter,
+      buildFooter: buildFooter,
     );
   }
 }

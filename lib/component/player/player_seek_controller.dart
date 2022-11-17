@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:memo_app/component/player/player_manager.dart';
 import 'package:memo_app/hooks/use_ticker.dart';
+import 'package:memo_app/ui/player/player_controller_progress.dart';
 import 'package:video_player/video_player.dart';
 
 class PlayerSeekController extends HookWidget {
@@ -13,6 +14,7 @@ class PlayerSeekController extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final manager = PlayerManager(controller: controller);
+    final isMounted = useIsMounted();
     final width = useState(0.0);
     // 0.0 - 1.0
     final progress = useState(0.0);
@@ -20,7 +22,9 @@ class PlayerSeekController extends HookWidget {
     final shouldPlayAfterDrag = useState(false);
 
     final ticker = useTicker(Ticker((_) async {
-      progress.value = await manager.progress;
+      if (isMounted()) {
+        progress.value = await manager.progress;
+      }
     }));
 
     useListenable(controller);
@@ -35,7 +39,10 @@ class PlayerSeekController extends HookWidget {
       }
     }, [controller.value.isPlaying]);
 
-    return GestureDetector(
+    return PlayerControllerProgress(
+      progress: progress.value,
+      currentTime: manager.formatDuration(manager.position),
+      totalTime: manager.formatDuration(manager.duration),
       onHorizontalDragStart: (details) {
         width.value = context.size?.width ?? 0;
         shouldPlayAfterDrag.value = controller.value.isPlaying;
@@ -58,47 +65,6 @@ class PlayerSeekController extends HookWidget {
           manager.play();
         }
       },
-      child: Material(
-        color: Colors.grey.shade800.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(10),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Container(
-            child: Column(
-              children: [
-                Container(
-                  // duration: controller.value.duration,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.white, Colors.grey.shade800],
-                      stops: [progress.value, progress.value],
-                    ),
-                    color: Colors.grey.shade900.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 8),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      manager.formatDuration(manager.position),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      manager.formatDuration(manager.duration),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
