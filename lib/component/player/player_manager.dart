@@ -3,9 +3,10 @@ import 'package:video_player/video_player.dart';
 abstract class IPlayerManager {
   Future<void> play();
   Future<void> pause();
+  Future<void> seekTo(Duration position);
+  String formatDuration(Duration duration);
   Duration get duration;
   Duration get position; // 500msごとの位置
-  String formatDuration(Duration duration);
   Future<Duration?> get exactPosition;
   Future<double> get progress; // 0.0 -- 1.0
 }
@@ -61,5 +62,10 @@ class PlayerManager implements IPlayerManager {
     final mm = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
     final hh = duration.inHours.remainder(60).toString().padLeft(2, '0');
     return '$hh:$mm:$ss';
+  }
+
+  @override
+  Future<void> seekTo(Duration position) {
+    return controller.seekTo(position);
   }
 }

@@ -5,23 +5,10 @@ import 'package:memo_app/component/player/player_manager.dart';
 import 'package:memo_app/hooks/use_ticker.dart';
 import 'package:video_player/video_player.dart';
 
-extension DurationExt on Duration {
-  String get format {
-    final ss = inSeconds.remainder(60).toString().padLeft(2, '0');
-    final mm = inMinutes.remainder(60).toString().padLeft(2, '0');
-    final hh = inHours.remainder(60).toString().padLeft(2, '0');
-    return '$hh:$mm:$ss';
-  }
-}
-
 class PlayerSeekController extends HookWidget {
   final VideoPlayerController controller;
 
-  // 相対的に動画をシークする
-  final void Function(double dseek)? seekBy;
-
-  const PlayerSeekController(
-      {super.key, required this.controller, this.seekBy});
+  const PlayerSeekController({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -49,18 +36,22 @@ class PlayerSeekController extends HookWidget {
     return GestureDetector(
       onHorizontalDragStart: (details) {
         width.value = context.size?.width ?? 0;
-        // print(details);
+        manager.pause();
       },
-      onHorizontalDragUpdate: (details) {
-        // print(details);
+      onHorizontalDragUpdate: (details) async {
         if (width.value > 0) {
           final dx = details.delta.dx;
-          final dseek = dx / width.value;
-          if (seekBy != null) seekBy!(dseek);
+          final dmicro = (dx / width.value) * manager.duration.inMicroseconds;
+          final currentPosition = await manager.exactPosition ?? Duration.zero;
+          final position = Duration(
+            microseconds: currentPosition.inMicroseconds + dmicro.toInt(),
+          );
+          await manager.seekTo(position);
+          progress.value = await manager.progress;
         }
       },
       onHorizontalDragEnd: (details) {
-        // print(details);
+        manager.play();
       },
       child: Material(
         color: Colors.grey.shade800.withOpacity(0.8),
