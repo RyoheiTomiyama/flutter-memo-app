@@ -17,7 +17,9 @@ class PlayerController extends HookWidget {
         color: Colors.grey.shade800,
         iconSize: 80,
         icon: const Icon(Icons.play_arrow_rounded),
-        onPressed: () {},
+        onPressed: () {
+          controller.value.isPlaying ? controller.pause() : controller.play();
+        },
       ),
     );
   }
@@ -34,33 +36,7 @@ class PlayerController extends HookWidget {
   @override
   Widget build(BuildContext context) {
     // print('render controller');
-    useListenable(controller);
-
-    // final double progress = useMemoized(() {
-    //   // print('2');
-    //   if (!controller.value.isInitialized) {
-    //     return 0;
-    //   }
-    //   final position = controller.value.position.inMilliseconds;
-    //   final duration = controller.value.duration.inMilliseconds;
-    //   return position / duration * 100;
-    // }, [controller.value.position, controller.value.duration]);
-    // final String duration = useMemoized(() {
-    //   // print('1');
-    //   if (!controller.value.isInitialized) {
-    //     return '-:-';
-    //   }
-    //   final duration = controller.value.duration.format;
-    //   return duration;
-    // }, [controller.value.position, controller.value.duration]);
-    // final String position = useMemoized(() {
-    //   // print('1');
-    //   if (!controller.value.isInitialized) {
-    //     return '-:-';
-    //   }
-    //   final position = controller.value.position.format;
-    //   return position;
-    // }, [controller.value.position, controller.value.duration]);
+    // useListenable(controller);
 
     return Container(
       // color: Colors.amber,

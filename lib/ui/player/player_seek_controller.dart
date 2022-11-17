@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:memo_app/component/player/player_manager.dart';
 import 'package:memo_app/hooks/use_ticker.dart';
 import 'package:video_player/video_player.dart';
 
@@ -15,8 +16,6 @@ extension DurationExt on Duration {
 
 class PlayerSeekController extends HookWidget {
   final VideoPlayerController controller;
-  // %
-  // final double progress;
 
   // 相対的に動画をシークする
   final void Function(double dseek)? seekBy;
@@ -26,36 +25,16 @@ class PlayerSeekController extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final manager = PlayerManager(controller: controller);
     final width = useState(0.0);
-
     // 0.0 - 1.0
     final progress = useState(0.0);
 
-    final String duration = useMemoized(() {
-      // print('1');
-      if (!controller.value.isInitialized) {
-        return '-:-';
-      }
-      final duration = controller.value.duration.format;
-      return duration;
-    }, [controller.value.position, controller.value.duration]);
-
-    final position = useMemoized(() async {
-      // print('1');
-      if (!controller.value.isInitialized) {
-        return '-:-';
-      }
-      final position = (await controller.position)?.format ?? '-:-';
-      return position;
-    }, [controller.value.position, controller.value.duration]);
-
-    final positionSnapshot = useFuture(position);
-
     final ticker = useTicker(Ticker((_) async {
-      final pos = (await controller.position)?.inMilliseconds ?? 0;
-      final dur = controller.value.duration.inMilliseconds;
-      progress.value = pos / dur;
+      progress.value = await manager.progress;
     }));
+
+    useListenable(controller);
 
     useEffect(() {
       if (controller.value.isPlaying) {
@@ -109,9 +88,14 @@ class PlayerSeekController extends HookWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(positionSnapshot.data ?? '',
-                        style: TextStyle(color: Colors.white)),
-                    Text(duration, style: TextStyle(color: Colors.white)),
+                    Text(
+                      manager.formatDuration(manager.position),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      manager.formatDuration(manager.duration),
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ],
                 )
               ],
