@@ -17,6 +17,8 @@ class PlayerSeekController extends HookWidget {
     // 0.0 - 1.0
     final progress = useState(0.0);
 
+    final shouldPlayAfterDrag = useState(false);
+
     final ticker = useTicker(Ticker((_) async {
       progress.value = await manager.progress;
     }));
@@ -36,6 +38,7 @@ class PlayerSeekController extends HookWidget {
     return GestureDetector(
       onHorizontalDragStart: (details) {
         width.value = context.size?.width ?? 0;
+        shouldPlayAfterDrag.value = controller.value.isPlaying;
         manager.pause();
       },
       onHorizontalDragUpdate: (details) async {
@@ -51,7 +54,9 @@ class PlayerSeekController extends HookWidget {
         }
       },
       onHorizontalDragEnd: (details) {
-        manager.play();
+        if (shouldPlayAfterDrag.value) {
+          manager.play();
+        }
       },
       child: Material(
         color: Colors.grey.shade800.withOpacity(0.8),
