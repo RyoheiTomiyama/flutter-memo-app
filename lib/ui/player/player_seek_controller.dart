@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:memo_app/hooks/use_ticker.dart';
 import 'package:video_player/video_player.dart';
 
 extension DurationExt on Duration {
@@ -25,15 +27,9 @@ class PlayerSeekController extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final width = useState(0.0);
-    final double progress = useMemoized(() {
-      // print('2');
-      if (!controller.value.isInitialized) {
-        return 0;
-      }
-      final position = controller.value.position.inMilliseconds;
-      final duration = controller.value.duration.inMilliseconds;
-      return position / duration * 100;
-    }, [controller.value.position, controller.value.duration]);
+
+    // 0.0 - 1.0
+    final progress = useState(0.0);
 
     final String duration = useMemoized(() {
       // print('1');
@@ -44,14 +40,32 @@ class PlayerSeekController extends HookWidget {
       return duration;
     }, [controller.value.position, controller.value.duration]);
 
-    final String position = useMemoized(() {
+    final position = useMemoized(() async {
       // print('1');
       if (!controller.value.isInitialized) {
         return '-:-';
       }
-      final position = controller.value.position.format;
+      final position = (await controller.position)?.format ?? '-:-';
       return position;
     }, [controller.value.position, controller.value.duration]);
+
+    final positionSnapshot = useFuture(position);
+
+    final ticker = useTicker(Ticker((_) async {
+      final pos = (await controller.position)?.inMilliseconds ?? 0;
+      final dur = controller.value.duration.inMilliseconds;
+      progress.value = pos / dur;
+    }));
+
+    useEffect(() {
+      if (controller.value.isPlaying) {
+        print('play');
+        ticker.start();
+      } else {
+        print('stop');
+        ticker.stop();
+      }
+    }, [controller.value.isPlaying]);
 
     return GestureDetector(
       onHorizontalDragStart: (details) {
@@ -78,11 +92,12 @@ class PlayerSeekController extends HookWidget {
             child: Column(
               children: [
                 Container(
+                  // duration: controller.value.duration,
                   height: 4,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [Colors.white, Colors.grey.shade800],
-                      stops: [progress / 100, progress / 100],
+                      stops: [progress.value, progress.value],
                     ),
                     color: Colors.grey.shade900.withOpacity(0.8),
                     borderRadius: BorderRadius.circular(2),
@@ -94,7 +109,8 @@ class PlayerSeekController extends HookWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(position, style: TextStyle(color: Colors.white)),
+                    Text(positionSnapshot.data ?? '',
+                        style: TextStyle(color: Colors.white)),
                     Text(duration, style: TextStyle(color: Colors.white)),
                   ],
                 )
