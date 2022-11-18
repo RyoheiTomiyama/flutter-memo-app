@@ -36,12 +36,11 @@ class PlayerSeekController extends HookConsumerWidget {
 
     useEffect(() {
       if (controller.value.isPlaying) {
-        print('play');
         ticker.start();
       } else {
-        print('stop');
         ticker.stop();
       }
+      return null;
     }, [controller.value.isPlaying]);
 
     return PlayerControllerProgress(

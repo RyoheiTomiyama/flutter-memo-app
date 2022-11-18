@@ -11,7 +11,7 @@ class Player extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    print('render');
+    // print('render');
 
     final playerManager = ref.watch(playerManagerProvider);
     final playerManagerNotifier = ref.watch(playerManagerProvider.notifier);
@@ -24,6 +24,7 @@ class Player extends HookConsumerWidget {
           ),
         );
       });
+      return null;
     }, []);
 
     final initialize = useMemoized(() async {
@@ -43,7 +44,7 @@ class Player extends HookConsumerWidget {
         children: [
           if (initializeSnapshot.hasData)
             PlayerViewer(controller: playerManager.controller!),
-          if (initializeSnapshot.hasData) PlayerController(),
+          if (initializeSnapshot.hasData) const PlayerController(),
         ],
       ),
     );
