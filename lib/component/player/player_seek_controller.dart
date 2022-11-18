@@ -52,6 +52,7 @@ class PlayerSeekController extends HookConsumerWidget {
         width.value = context.size?.width ?? 0;
         shouldPlayAfterDrag.value = controller.value.isPlaying;
         playerManagerNotifier.pause();
+        playerManagerNotifier.setSeeking(true);
       },
       onHorizontalDragUpdate: (details) async {
         if (width.value > 0) {
@@ -68,6 +69,7 @@ class PlayerSeekController extends HookConsumerWidget {
         }
       },
       onHorizontalDragEnd: (details) {
+        playerManagerNotifier.setSeeking(false);
         if (shouldPlayAfterDrag.value) {
           playerManagerNotifier.play();
         }

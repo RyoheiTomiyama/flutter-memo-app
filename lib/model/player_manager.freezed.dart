@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$PlayerManagerState {
   VideoPlayerController? get controller => throw _privateConstructorUsedError;
+  bool get isSeeking => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $PlayerManagerStateCopyWith<PlayerManagerState> get copyWith =>
@@ -29,7 +30,7 @@ abstract class $PlayerManagerStateCopyWith<$Res> {
           PlayerManagerState value, $Res Function(PlayerManagerState) then) =
       _$PlayerManagerStateCopyWithImpl<$Res, PlayerManagerState>;
   @useResult
-  $Res call({VideoPlayerController? controller});
+  $Res call({VideoPlayerController? controller, bool isSeeking});
 }
 
 /// @nodoc
@@ -46,12 +47,17 @@ class _$PlayerManagerStateCopyWithImpl<$Res, $Val extends PlayerManagerState>
   @override
   $Res call({
     Object? controller = freezed,
+    Object? isSeeking = null,
   }) {
     return _then(_value.copyWith(
       controller: freezed == controller
           ? _value.controller
           : controller // ignore: cast_nullable_to_non_nullable
               as VideoPlayerController?,
+      isSeeking: null == isSeeking
+          ? _value.isSeeking
+          : isSeeking // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -64,7 +70,7 @@ abstract class _$$_PlayerManagerStateCopyWith<$Res>
       __$$_PlayerManagerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({VideoPlayerController? controller});
+  $Res call({VideoPlayerController? controller, bool isSeeking});
 }
 
 /// @nodoc
@@ -79,12 +85,17 @@ class __$$_PlayerManagerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? controller = freezed,
+    Object? isSeeking = null,
   }) {
     return _then(_$_PlayerManagerState(
       controller: freezed == controller
           ? _value.controller
           : controller // ignore: cast_nullable_to_non_nullable
               as VideoPlayerController?,
+      isSeeking: null == isSeeking
+          ? _value.isSeeking
+          : isSeeking // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -93,15 +104,19 @@ class __$$_PlayerManagerStateCopyWithImpl<$Res>
 
 class _$_PlayerManagerState extends _PlayerManagerState
     with DiagnosticableTreeMixin {
-  const _$_PlayerManagerState({this.controller = null}) : super._();
+  const _$_PlayerManagerState({this.controller = null, this.isSeeking = false})
+      : super._();
 
   @override
   @JsonKey()
   final VideoPlayerController? controller;
+  @override
+  @JsonKey()
+  final bool isSeeking;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PlayerManagerState(controller: $controller)';
+    return 'PlayerManagerState(controller: $controller, isSeeking: $isSeeking)';
   }
 
   @override
@@ -109,7 +124,8 @@ class _$_PlayerManagerState extends _PlayerManagerState
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'PlayerManagerState'))
-      ..add(DiagnosticsProperty('controller', controller));
+      ..add(DiagnosticsProperty('controller', controller))
+      ..add(DiagnosticsProperty('isSeeking', isSeeking));
   }
 
   @override
@@ -118,11 +134,13 @@ class _$_PlayerManagerState extends _PlayerManagerState
         (other.runtimeType == runtimeType &&
             other is _$_PlayerManagerState &&
             (identical(other.controller, controller) ||
-                other.controller == controller));
+                other.controller == controller) &&
+            (identical(other.isSeeking, isSeeking) ||
+                other.isSeeking == isSeeking));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, controller);
+  int get hashCode => Object.hash(runtimeType, controller, isSeeking);
 
   @JsonKey(ignore: true)
   @override
@@ -133,12 +151,15 @@ class _$_PlayerManagerState extends _PlayerManagerState
 }
 
 abstract class _PlayerManagerState extends PlayerManagerState {
-  const factory _PlayerManagerState({final VideoPlayerController? controller}) =
-      _$_PlayerManagerState;
+  const factory _PlayerManagerState(
+      {final VideoPlayerController? controller,
+      final bool isSeeking}) = _$_PlayerManagerState;
   const _PlayerManagerState._() : super._();
 
   @override
   VideoPlayerController? get controller;
+  @override
+  bool get isSeeking;
   @override
   @JsonKey(ignore: true)
   _$$_PlayerManagerStateCopyWith<_$_PlayerManagerState> get copyWith =>

@@ -26,6 +26,9 @@ class PlayerController extends HookConsumerWidget {
     }
 
     Widget buildCenter() {
+      if (playerManager.isSeeking) {
+        return Container();
+      }
       return PlayerControllerPlayback(
         isPlay: controller.value.isPlaying,
         onPressed: () {

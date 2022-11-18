@@ -13,6 +13,8 @@ class PlayerManagerState with _$PlayerManagerState {
 
   const factory PlayerManagerState({
     @Default(null) VideoPlayerController? controller,
+    // Seekバーをドラッグ中はtrueにする
+    @Default(false) bool isSeeking,
   }) = _PlayerManagerState;
 
   bool get isInitialized {
@@ -47,7 +49,7 @@ class PlayerManagerState with _$PlayerManagerState {
 }
 
 class PlayerManagerModel extends StateNotifier<PlayerManagerState> {
-  PlayerManagerModel() : super(PlayerManagerState());
+  PlayerManagerModel() : super(const PlayerManagerState());
 
   void addController(VideoPlayerController con) {
     state = state.copyWith(controller: con);
@@ -95,6 +97,12 @@ class PlayerManagerModel extends StateNotifier<PlayerManagerState> {
       return;
     }
     return state.controller!.seekTo(position);
+  }
+
+  void setSeeking(bool b) {
+    if (state.isSeeking != b) {
+      state = state.copyWith(isSeeking: b);
+    }
   }
 
   @override
