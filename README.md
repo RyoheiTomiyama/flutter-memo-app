@@ -2,15 +2,21 @@
 
 A new Flutter project.
 
-## Getting Started
+## クリーンアーキテクチャー風にしてみる
 
-This project is a starting point for a Flutter application.
+### 全体図
 
-A few resources to get you started if this is your first Flutter project:
+```
+- /Domain: ビジネスロジック
+-- Entity, IRepository, IUseCase, IPresenter　実装は入れない
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- /Application: アプリケーションロジック
+-- Interactor: IUseCaseの実装部分 IReposity, Ipresenterを受け取ってどういった処理を行うのか
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- /Interface: 実装部分
+-- Repository, Presenterの実装を行う
+```
+
+Presenterを使う場面のは手間が増えるだけなので、今の所使わなず、UseCaseInteractorから値を返す。
+
+Controllerもなし。riverpodのmodelがControllerの役割を担う。

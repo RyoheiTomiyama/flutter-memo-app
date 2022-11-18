@@ -1,6 +1,7 @@
 import 'package:memo_app/view/about.dart';
 import 'package:memo_app/view/home.dart';
 import 'package:memo_app/view/overlay_dropdown.dart';
+import 'package:memo_app/view/video/video_list.dart';
 import 'package:memo_app/view/video/video_playback.dart';
 
 final routes = {
@@ -8,4 +9,5 @@ final routes = {
   '/about': (context) => const About(title: 'Flutter Demo About Page'),
   '/overlay': (context) => const OverlayDropdown(),
   '/player': (context) => const VideoPlayback(),
+  '/video-list': (context) => const VideoList(),
 };
