@@ -16,7 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$PlayerManagerState {
-  VideoPlayerController? get controller => throw _privateConstructorUsedError;
+  VideoPlayerController? get controller =>
+      throw _privateConstructorUsedError; // Seekバーをドラッグ中はtrueにする
   bool get isSeeking => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -110,6 +111,7 @@ class _$_PlayerManagerState extends _PlayerManagerState
   @override
   @JsonKey()
   final VideoPlayerController? controller;
+// Seekバーをドラッグ中はtrueにする
   @override
   @JsonKey()
   final bool isSeeking;
@@ -158,7 +160,7 @@ abstract class _PlayerManagerState extends PlayerManagerState {
 
   @override
   VideoPlayerController? get controller;
-  @override
+  @override // Seekバーをドラッグ中はtrueにする
   bool get isSeeking;
   @override
   @JsonKey(ignore: true)
