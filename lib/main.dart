@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      initialRoute: '/video-list',
+      initialRoute: Routes.videoGallery.name,
       routes: routes,
     );
   }
