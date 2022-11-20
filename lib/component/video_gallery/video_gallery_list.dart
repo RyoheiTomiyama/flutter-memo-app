@@ -41,7 +41,7 @@ class VideoGalleryList extends HookConsumerWidget {
 
     final infoValue = useMemoized(() {
       final gallery = videoGallery.galleryList[currentNum.value * axisCount];
-      final format = DateFormat.yMd();
+      final format = DateFormat.yMMMd();
       return format.format(gallery.createdAt);
     }, [videoGallery.galleryList, currentNum.value]);
 
