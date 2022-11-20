@@ -1,4 +1,6 @@
 // アプリがどういう動作を求めているか
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:memo_app/domain/gallery/entity_gallery.dart';
@@ -9,4 +11,7 @@ abstract class IUsecaseGallery {
 
   // サムネイルを取得する
   Future<Uint8List> getThumbnail(Gallery gallery, {Size size});
+
+  // idから動画Fileを取得する
+  Future<File> getFileById(String id);
 }

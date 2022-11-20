@@ -1,5 +1,6 @@
 // UseCase Interactor
 // ユースケースを実現するのにどういう処理をするのか
+import 'dart:io';
 import 'dart:ui';
 
 import 'dart:typed_data';
@@ -25,5 +26,11 @@ class InteractorGallery implements IUsecaseGallery {
     Size size = const Size(200, 200),
   }) {
     return galleryRepository.getThumbnail(gallery, size: size);
+  }
+
+  @override
+  Future<File> getFileById(String id) async {
+    final Gallery gallery = await galleryRepository.getGallery(id: id);
+    return galleryRepository.getGalleryFile(gallery);
   }
 }

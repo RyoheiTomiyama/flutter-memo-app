@@ -1,8 +1,11 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:memo_app/application/gallery/interactor_gallery.dart';
+import 'package:memo_app/interface/gallery/repository_gallery.dart';
 import 'package:video_player/video_player.dart';
 
 part 'player_manager.freezed.dart';
@@ -50,6 +53,7 @@ class PlayerManagerState with _$PlayerManagerState {
 
 class PlayerManagerModel extends StateNotifier<PlayerManagerState> {
   PlayerManagerModel() : super(const PlayerManagerState());
+  final galleryInteractor = InteractorGallery(RepositoryGallery());
 
   void addController(VideoPlayerController con) {
     state = state.copyWith(controller: con);
@@ -103,6 +107,11 @@ class PlayerManagerModel extends StateNotifier<PlayerManagerState> {
     if (state.isSeeking != b) {
       state = state.copyWith(isSeeking: b);
     }
+  }
+
+  Future<File> getFileById(String id) async {
+    final file = await galleryInteractor.getFileById(id);
+    return file;
   }
 
   @override

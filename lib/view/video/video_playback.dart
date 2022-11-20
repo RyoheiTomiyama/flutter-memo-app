@@ -33,9 +33,9 @@ class VideoPlayback extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SwipeUpPanel(
-        body: Player(),
+        body: Player(id: id),
       ),
     );
   }

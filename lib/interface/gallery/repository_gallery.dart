@@ -26,12 +26,7 @@ class RepositoryGallery implements IRepositoryGallery {
           await allVideoPath.getAssetListRange(start: 0, end: count);
       return assetList
           .map(
-            (asset) => Gallery(
-              id: asset.id,
-              path: asset.title ?? '',
-              createdAt: asset.createDateTime,
-              modifiedAt: asset.modifiedDateTime,
-            ),
+            (asset) => _createGallery(asset),
           )
           .toList();
       // Granted.
@@ -70,4 +65,47 @@ class RepositoryGallery implements IRepositoryGallery {
     }
     return thumbnail;
   }
+
+  @override
+  Future<Gallery> getGallery({required String id}) async {
+    final PermissionState permissionState =
+        await PhotoManager.requestPermissionExtend();
+    if (permissionState.isAuth) {
+      final AssetEntity? asset = await AssetEntity.fromId(id);
+      if (asset == null) {
+        throw Exception('not found file');
+      }
+      return _createGallery(asset);
+    } else {
+      throw Exception('not permitted');
+    }
+  }
+
+  @override
+  Future<File> getGalleryFile(Gallery gallery) async {
+    final PermissionState permissionState =
+        await PhotoManager.requestPermissionExtend();
+    if (permissionState.isAuth) {
+      final AssetEntity? asset = await AssetEntity.fromId(gallery.id);
+      if (asset == null) {
+        throw Exception('not found AssetEntity');
+      }
+      final file = await asset.file;
+      if (file == null) {
+        throw Exception('not found file');
+      }
+      return file;
+    } else {
+      throw Exception('not permitted');
+    }
+  }
+}
+
+Gallery _createGallery(AssetEntity asset) {
+  return Gallery(
+    id: asset.id,
+    path: asset.title ?? '',
+    createdAt: asset.createDateTime,
+    modifiedAt: asset.modifiedDateTime,
+  );
 }
