@@ -46,6 +46,8 @@ dependencies:
   widgetbook: ^2.4.1
   chewie: ^1.3.5
   video_player: ^2.4.7
+  intl: ^0.17.0
+  photo_manager: ^2.5.0
 
 dev_dependencies:
   flutter_test:

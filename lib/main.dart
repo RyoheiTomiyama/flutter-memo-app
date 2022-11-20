@@ -1,18 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:memo_app/routes.dart';
 
-import 'package:logging/logging.dart' as logging;
-
 void main() {
-  logging.Logger.root.level = logging.Level.ALL;
+  Intl.defaultLocale = Platform.localeName;
+  initializeDateFormatting(Intl.defaultLocale);
   runApp(
     const ProviderScope(child: MyApp()),
   );
 }
 
-class MyApp extends HookWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
@@ -23,7 +25,7 @@ class MyApp extends HookWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      initialRoute: '/player',
+      initialRoute: '/video-list',
       routes: routes,
     );
   }

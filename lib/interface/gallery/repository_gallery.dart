@@ -25,10 +25,14 @@ class RepositoryGallery implements IRepositoryGallery {
       final assetList =
           await allVideoPath.getAssetListRange(start: 0, end: count);
       return assetList
-          .map((asset) => Gallery(
-                id: asset.id,
-                path: asset.title ?? '',
-              ))
+          .map(
+            (asset) => Gallery(
+              id: asset.id,
+              path: asset.title ?? '',
+              createdAt: asset.createDateTime,
+              modifiedAt: asset.modifiedDateTime,
+            ),
+          )
           .toList();
       // Granted.
       // final List<AssetEntity> entities = await path.getAssetListPaged(page: 0, size: 80,);
