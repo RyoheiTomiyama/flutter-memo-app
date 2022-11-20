@@ -29,8 +29,9 @@ class PlayerSeekController extends HookConsumerWidget {
     final shouldPlayAfterDrag = useState(false);
 
     final ticker = useTicker(Ticker((_) async {
+      final newProgress = await playerManager.progress;
       if (isMounted()) {
-        progress.value = await playerManager.progress;
+        progress.value = newProgress;
       }
     }));
 
