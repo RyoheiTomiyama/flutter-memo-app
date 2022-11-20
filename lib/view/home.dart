@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:memo_app/component/editor/editor.dart';
 import 'package:memo_app/component/editor/my_editor.dart';
+import 'package:memo_app/view/view_base.dart';
 
+class HomeView implements ViewBase {
+  @override
+  ViewBuilder get builder => (context, {args}) {
+        return const Home(
+          title: 'This is Home',
+        );
+      };
+
+  @override
+  String get name => '/';
+}
+
+//
 class Home extends HookConsumerWidget {
   const Home({super.key, required this.title});
 

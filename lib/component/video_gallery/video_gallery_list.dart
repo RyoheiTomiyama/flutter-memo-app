@@ -5,9 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:memo_app/component/video_gallery/video_gallery_image.dart';
 import 'package:memo_app/domain/gallery/entity_gallery.dart';
 import 'package:memo_app/provider/video_gallery_provider.dart';
+import 'package:memo_app/routes.dart';
 import 'package:memo_app/ui/gallery/gallery_grid_view.dart';
 import 'package:memo_app/ui/gallery/gallery_scroll_info.dart';
 import 'package:memo_app/ui/gallery/gallery_scrollbar.dart';
+import 'package:memo_app/view/video/video_playback.dart';
 
 const axisCount = 2;
 
@@ -61,8 +63,19 @@ class VideoGalleryList extends HookConsumerWidget {
               scrollController: scrollController,
               itemCount: items.length,
               itemBuilder: (context, index) {
-                return VideoGalleryImage(
-                  gallery: items[index],
+                return Ink(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.player.name,
+                        arguments: VideoPlaybackArgument(id: items[index].id),
+                      );
+                    },
+                    child: VideoGalleryImage(
+                      gallery: items[index],
+                    ),
+                  ),
                 );
               },
             ),

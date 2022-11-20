@@ -3,6 +3,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memo_app/component/video_gallery/video_gallery_list.dart';
 import 'package:memo_app/provider/video_gallery_provider.dart';
+import 'package:memo_app/view/view_base.dart';
+
+class VideoListView implements ViewBase {
+  @override
+  ViewBuilder get builder => (context, {args}) => const VideoList();
+
+  @override
+  String get name => '/video-gallery';
+}
 
 class VideoList extends HookConsumerWidget {
   const VideoList({super.key});

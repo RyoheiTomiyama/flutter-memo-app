@@ -3,13 +3,20 @@ import 'package:memo_app/view/about.dart';
 import 'package:memo_app/view/home.dart';
 import 'package:memo_app/view/video/video_list.dart';
 import 'package:memo_app/view/video/video_playback.dart';
+import 'package:memo_app/view/view_base.dart';
 
 class NavigatorRoute {
-  final String name;
+  late String name;
 
-  final WidgetBuilder builder;
+  late WidgetBuilder builder;
 
-  NavigatorRoute(this.name, this.builder);
+  NavigatorRoute(ViewBase view) {
+    name = view.name;
+    builder = ((context) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      return view.builder(context, args: args);
+    });
+  }
 }
 
 class Routes {
@@ -20,25 +27,13 @@ class Routes {
         videoGallery,
       ];
 
-  static final home = NavigatorRoute(
-    '/',
-    (context) => const Home(title: 'Flutter Demo Home Page'),
-  );
+  static final home = NavigatorRoute(HomeView());
 
-  static final about = NavigatorRoute(
-    '/about',
-    (context) => const About(title: 'Flutter Demo About Page'),
-  );
+  static final about = NavigatorRoute(AboutView());
 
-  static final player = NavigatorRoute(
-    '/player',
-    (context) => const VideoPlayback(),
-  );
+  static final player = NavigatorRoute(VideoPlaybackView());
 
-  static final videoGallery = NavigatorRoute(
-    '/video-gallery',
-    (context) => const VideoList(),
-  );
+  static final videoGallery = NavigatorRoute(VideoListView());
 }
 
 final routes = {
