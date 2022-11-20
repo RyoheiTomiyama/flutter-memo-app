@@ -23,7 +23,7 @@ class VideoGalleryList extends HookConsumerWidget {
     final currentNum = useState(0);
     final scrollController = useScrollController();
     // useListenable(scrollController);
-    print('render');
+    // print('render');
 
     final onScroll = useCallback(() {
       // print('hoge ${scrollController.position.viewportDimension}');
