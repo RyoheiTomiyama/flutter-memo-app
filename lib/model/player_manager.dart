@@ -100,7 +100,8 @@ class PlayerManagerModel extends StateNotifier<PlayerManagerState> {
     if (!state.isInitialized) {
       return;
     }
-    return state.controller!.seekTo(position);
+    // video_playerのiOSの実装を見るとseekToで描画完了まで待てていないようTODOにはなっていた
+    await state.controller!.seekTo(position);
   }
 
   void setSeeking(bool b) {

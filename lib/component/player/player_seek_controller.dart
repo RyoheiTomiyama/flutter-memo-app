@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -44,6 +46,22 @@ class PlayerSeekController extends HookConsumerWidget {
       return null;
     }, [controller.value.isPlaying]);
 
+    final isWait = useState(false);
+
+    final timer = useState<Timer?>(null);
+
+    final dx = useState(0.0);
+
+    // timerでSeekの頻度は抑えた
+    // TODO 最後のseekが動いてくようにストックする容器を用意する
+    final setTimer = useCallback(() {
+      return Timer.periodic(const Duration(milliseconds: 33), (timer) {
+        if (isMounted()) {
+          isWait.value = false;
+        }
+      });
+    }, []);
+
     return PlayerControllerProgress(
       progress: progress.value,
       currentTime: playerManagerNotifier.formatDuration(playerManager.position),
@@ -56,16 +74,23 @@ class PlayerSeekController extends HookConsumerWidget {
       },
       onHorizontalDragUpdate: (details) async {
         if (width.value > 0) {
-          final dx = details.delta.dx;
+          dx.value += details.delta.dx;
           final dmicro =
-              (dx / width.value) * playerManager.duration.inMicroseconds;
+              (dx.value / width.value) * playerManager.duration.inMicroseconds;
           final currentPosition =
               await playerManager.exactPosition ?? Duration.zero;
           final position = Duration(
             microseconds: currentPosition.inMicroseconds + dmicro.toInt(),
           );
-          await playerManagerNotifier.seekTo(position);
-          progress.value = await playerManager.progress;
+          if (!isWait.value) {
+            print(DateTime.now());
+            if (timer.value != null) timer.value!.cancel();
+            dx.value = 0;
+            isWait.value = true;
+            await playerManagerNotifier.seekTo(position);
+            timer.value = setTimer();
+            progress.value = await playerManager.progress;
+          }
         }
       },
       onHorizontalDragEnd: (details) {
