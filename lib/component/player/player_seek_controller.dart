@@ -48,19 +48,48 @@ class PlayerSeekController extends HookConsumerWidget {
 
     final isWait = useState(false);
 
+    // 連続してSeekするとレンダリングが間に合わないから次のSeekをポジションを保管しておく
+    final stackSeek = useState<Duration?>(null);
+
     final timer = useState<Timer?>(null);
 
     final dx = useState(0.0);
 
-    // timerでSeekの頻度は抑えた
-    // TODO 最後のseekが動いてくようにストックする容器を用意する
-    final setTimer = useCallback(() {
-      return Timer.periodic(const Duration(milliseconds: 33), (timer) {
-        if (isMounted()) {
-          isWait.value = false;
-        }
-      });
+    final seekTo = useCallback((Duration position) async {
+      dx.value = 0;
+      await playerManagerNotifier.seekTo(position);
+      progress.value = await playerManager.progress;
     }, []);
+
+    // timerでSeekの頻度は抑えた
+    final setTimer = useCallback((void Function() callback) {
+      timer.value = Timer(const Duration(milliseconds: 80), callback);
+    }, []);
+
+    // stackSeekに積まれていたらSeekして、発火したことをtrueで返す
+    final loadStackSeek = useCallback(() async {
+      if (isMounted()) {
+        // 積まれていたら
+        if (stackSeek.value != null) {
+          await seekTo(stackSeek.value!);
+          stackSeek.value = null;
+          return true;
+        } else {
+          isWait.value = false;
+          return false;
+        }
+      }
+      return false;
+    }, [stackSeek.value]);
+
+    nestedCheck() async {
+      final isSeekCalled = await loadStackSeek();
+      if (isSeekCalled) {
+        // seekが実行された場合は次のタイマーを実行する
+        isWait.value = true;
+        setTimer(nestedCheck);
+      }
+    }
 
     return PlayerControllerProgress(
       progress: progress.value,
@@ -83,13 +112,12 @@ class PlayerSeekController extends HookConsumerWidget {
             microseconds: currentPosition.inMicroseconds + dmicro.toInt(),
           );
           if (!isWait.value) {
-            print(DateTime.now());
             if (timer.value != null) timer.value!.cancel();
-            dx.value = 0;
+            await seekTo(position);
             isWait.value = true;
-            await playerManagerNotifier.seekTo(position);
-            timer.value = setTimer();
-            progress.value = await playerManager.progress;
+            setTimer(nestedCheck);
+          } else {
+            stackSeek.value = position;
           }
         }
       },
