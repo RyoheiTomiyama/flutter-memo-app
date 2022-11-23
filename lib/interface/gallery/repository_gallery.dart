@@ -5,32 +5,41 @@ import 'dart:ui';
 import 'dart:typed_data';
 
 import 'package:memo_app/domain/gallery/entity_gallery.dart';
+import 'package:memo_app/domain/gallery/entity_gallery_album.dart';
 import 'package:memo_app/domain/gallery/repository_gallery.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class RepositoryGallery implements IRepositoryGallery {
   @override
-  Future<List<Gallery>> getGalleries() async {
+  Future<List<GalleryAlbum>> getGalleryAlbums() async {
+    final List<AssetPathEntity> paths = await PhotoManager.getAssetPathList(
+      // type: RequestType.video,
+      hasAll: true,
+      onlyAll: false,
+    );
+    return paths.map((path) => _createGalleryAlbum(path)).toList();
+  }
+
+  @override
+  Future<List<Gallery>> getGalleries(GalleryAlbum? album) async {
     final PermissionState permissionState =
         await PhotoManager.requestPermissionExtend();
     if (permissionState.isAuth) {
       // Granted.
-      final List<AssetPathEntity> paths = await PhotoManager.getAssetPathList(
-        // type: RequestType.video,
-        hasAll: true,
-        onlyAll: false,
-      );
-      final allVideoPath = paths.firstWhere((element) => element.isAll);
-      final count = await allVideoPath.assetCountAsync;
-      final assetList =
-          await allVideoPath.getAssetListRange(start: 0, end: count);
-      return assetList
-          .map(
-            (asset) => _createGallery(asset),
-          )
-          .toList();
-      // Granted.
-      // final List<AssetEntity> entities = await path.getAssetListPaged(page: 0, size: 80,);
+      AssetPathEntity path;
+      if (album == null) {
+        final List<AssetPathEntity> paths = await PhotoManager.getAssetPathList(
+          // type: RequestType.video,
+          hasAll: true,
+          onlyAll: true,
+        );
+        path = paths.firstWhere((element) => element.isAll);
+      } else {
+        path = _galleryAlbum2AssetPathEntity(album);
+      }
+      final count = await path.assetCountAsync;
+      final assetList = await path.getAssetListRange(start: 0, end: count);
+      return assetList.map((asset) => _createGallery(asset)).toList();
     } else {
       // Limited(iOS) or Rejected, use `==` for more precise judgements.
       // You can call `PhotoManager.openSetting()` to open settings for further steps.
@@ -108,4 +117,16 @@ Gallery _createGallery(AssetEntity asset) {
     createdAt: asset.createDateTime,
     modifiedAt: asset.modifiedDateTime,
   );
+}
+
+GalleryAlbum _createGalleryAlbum(AssetPathEntity asset) {
+  return GalleryAlbum(
+    id: asset.id,
+    name: asset.name,
+    isAll: asset.isAll,
+  );
+}
+
+AssetPathEntity _galleryAlbum2AssetPathEntity(GalleryAlbum album) {
+  return AssetPathEntity(id: album.id, name: album.name);
 }

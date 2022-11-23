@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'dart:typed_data';
 
 import 'package:memo_app/domain/gallery/entity_gallery.dart';
+import 'package:memo_app/domain/gallery/entity_gallery_album.dart';
 import 'package:memo_app/domain/gallery/repository_gallery.dart';
 import 'package:memo_app/domain/gallery/usecase_gallery.dart';
 
@@ -15,8 +16,14 @@ class InteractorGallery implements IUsecaseGallery {
   InteractorGallery(this.galleryRepository);
 
   @override
-  Future<List<Gallery>> getGalleries() async {
-    final list = await galleryRepository.getGalleries();
+  Future<List<GalleryAlbum>> getGalleryAlbums() async {
+    final list = await galleryRepository.getGalleryAlbums();
+    return list;
+  }
+
+  @override
+  Future<List<Gallery>> getGalleries([GalleryAlbum? album]) async {
+    final list = await galleryRepository.getGalleries(album);
     return list;
   }
 
