@@ -4,8 +4,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:memo_app/component/video_gallery/video_gallery_image.dart';
 import 'package:memo_app/domain/gallery/entity_gallery.dart';
+import 'package:memo_app/domain/gallery/entity_gallery_album.dart';
 import 'package:memo_app/provider/video_gallery_provider.dart';
 import 'package:memo_app/routes.dart';
+import 'package:memo_app/ui/gallery/gallery_album_dropdown.dart';
 import 'package:memo_app/ui/gallery/gallery_grid_view.dart';
 import 'package:memo_app/ui/gallery/gallery_scroll_info.dart';
 import 'package:memo_app/ui/gallery/gallery_scrollbar.dart';
@@ -21,6 +23,9 @@ class VideoGalleryList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final videoGallery = ref.watch(videoGalleryProvider);
+    final videoGalleryNotifier = ref.watch(videoGalleryProvider.notifier);
+
+    final albumList = videoGallery.albumList;
 
     final currentNum = useState(0);
     final scrollController = useScrollController();
@@ -54,36 +59,67 @@ class VideoGalleryList extends HookConsumerWidget {
     }, [onScroll]);
 
     return SafeArea(
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          GalleryScrollbar(
-            // key: galleryKey,
-            controller: scrollController,
-            child: GalleryGridView(
-              scrollController: scrollController,
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return Ink(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        Routes.player.name,
-                        arguments: VideoPlaybackArgument(id: items[index].id),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                GalleryAlbumDropdown<GalleryAlbum>(
+                  value: videoGallery.currentAlbum,
+                  items: albumList.map<DropdownMenuItem<GalleryAlbum>>(
+                    (item) {
+                      return DropdownMenuItem(
+                        value: item,
+                        child: Text(item.name),
                       );
                     },
-                    child: VideoGalleryImage(
-                      gallery: items[index],
-                    ),
-                  ),
-                );
-              },
+                  ).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      videoGalleryNotifier.changeAlbum(value);
+                    }
+                  },
+                ),
+              ],
             ),
           ),
-          Positioned(
-            top: 10,
-            left: 10,
-            child: GalleryScrollInfo(value: infoValue),
+          Expanded(
+            child: Stack(
+              children: [
+                GalleryScrollbar(
+                  // key: galleryKey,
+                  controller: scrollController,
+                  child: GalleryGridView(
+                    scrollController: scrollController,
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      return Ink(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              Routes.player.name,
+                              arguments:
+                                  VideoPlaybackArgument(id: items[index].id),
+                            );
+                          },
+                          child: VideoGalleryImage(
+                            gallery: items[index],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Positioned(
+                  top: 10,
+                  left: 10,
+                  child: GalleryScrollInfo(value: infoValue),
+                ),
+              ],
+            ),
           ),
         ],
       ),
