@@ -13,11 +13,16 @@ class RepositoryGallery implements IRepositoryGallery {
   @override
   Future<List<GalleryAlbum>> getGalleryAlbums() async {
     final List<AssetPathEntity> paths = await PhotoManager.getAssetPathList(
-      // type: RequestType.video,
+      type: RequestType.video,
       hasAll: true,
       onlyAll: false,
     );
-    return paths.map((path) => _createGalleryAlbum(path)).toList();
+    final mapAlbum = await Future.wait(paths.map((path) async {
+      if (await path.assetCountAsync > 0) {
+        return _createGalleryAlbum(path);
+      }
+    }));
+    return mapAlbum.whereType<GalleryAlbum>().toList();
   }
 
   @override
@@ -29,15 +34,18 @@ class RepositoryGallery implements IRepositoryGallery {
       AssetPathEntity path;
       if (album == null) {
         final List<AssetPathEntity> paths = await PhotoManager.getAssetPathList(
-          // type: RequestType.video,
+          type: RequestType.video,
           hasAll: true,
           onlyAll: true,
         );
         path = paths.firstWhere((element) => element.isAll);
       } else {
-        path = _galleryAlbum2AssetPathEntity(album);
+        path = await AssetPathEntity.fromId(album.id, type: RequestType.video);
       }
       final count = await path.assetCountAsync;
+      if (count == 0) {
+        return [];
+      }
       final assetList = await path.getAssetListRange(start: 0, end: count);
       return assetList.map((asset) => _createGallery(asset)).toList();
     } else {
@@ -125,8 +133,4 @@ GalleryAlbum _createGalleryAlbum(AssetPathEntity asset) {
     name: asset.name,
     isAll: asset.isAll,
   );
-}
-
-AssetPathEntity _galleryAlbum2AssetPathEntity(GalleryAlbum album) {
-  return AssetPathEntity(id: album.id, name: album.name);
 }

@@ -18,14 +18,11 @@ class VideoList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    print('render');
     final videoGalleryNotifier = ref.watch(videoGalleryProvider.notifier);
     final videoGallery = ref.watch(videoGalleryProvider);
 
     final getGallery = useMemoized(() async {
       await videoGalleryNotifier.getGallery();
-      // TODO ０件のアルバムだと値が返ってこないend > startの条件に一致しないため
-      print('hoge');
       return true;
     }, [videoGallery.currentAlbum]);
 
@@ -36,9 +33,6 @@ class VideoList extends HookConsumerWidget {
 
     final getGallerySnapshot = useFuture(getGallery);
     final getAlbumSnapshot = useFuture(getAlbum);
-
-    print(getGallerySnapshot.hasData);
-    print(getAlbumSnapshot.hasData);
 
     if (getGallerySnapshot.hasData && getAlbumSnapshot.hasData) {
       return Scaffold(
