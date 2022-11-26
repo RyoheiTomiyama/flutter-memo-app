@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memo_app/component/video_gallery/video_gallery_list.dart';
@@ -35,9 +36,12 @@ class VideoList extends HookConsumerWidget {
     final getAlbumSnapshot = useFuture(getAlbum);
 
     if (getGallerySnapshot.hasData && getAlbumSnapshot.hasData) {
-      return Scaffold(
-        backgroundColor: Colors.black,
-        body: VideoGalleryList(items: videoGallery.galleryList),
+      return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: VideoGalleryList(items: videoGallery.galleryList),
+        ),
       );
     }
     return const SizedBox();
