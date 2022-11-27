@@ -8,16 +8,6 @@ class SwitchButtonItem<T extends Object> {
   const SwitchButtonItem({required this.label, required this.value});
 }
 
-class ActiveColor {
-  static Color get textColor => Colors.white;
-  static Color get backgroundColor => Colors.blue;
-}
-
-class DisabledColor {
-  static Color get textColor => Colors.black;
-  static Color get backgroundColor => Colors.transparent;
-}
-
 const defaultList = [
   SwitchButtonItem(label: 'メイン', value: '0'),
   SwitchButtonItem(label: 'スイッチ', value: '180'),
@@ -59,14 +49,17 @@ class SwitchButton extends HookWidget {
         child: Text(
           item.label,
           style: TextStyle(
-            color: isActive ? Colors.blue : Colors.grey.shade500,
+            fontWeight: FontWeight.bold,
+            color: isActive
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
           ),
         ),
       );
     }
 
     return Material(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
@@ -88,7 +81,8 @@ class SwitchButton extends HookWidget {
                 return Container(
                   width: 1,
                   height: 16,
-                  color: Colors.grey.shade500,
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                 );
               }
             }).toList(),

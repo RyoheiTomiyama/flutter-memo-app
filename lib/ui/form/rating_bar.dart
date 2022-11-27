@@ -108,6 +108,7 @@ class RatingBarWidget extends HookWidget {
       child: Icon(
         icon.value,
         size: 32,
+        color: Theme.of(context).colorScheme.primary,
       ),
     );
   }

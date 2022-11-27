@@ -50,25 +50,6 @@ class ScrollPicker extends HookWidget {
     this.onChange,
   }) : super(key: key);
 
-  Widget itemWidget(ScrollPickerItem e, bool isActive) {
-    return RotatedBox(
-      quarterTurns: 1,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-        alignment: Alignment.center,
-        // color: Colors.amber,
-        child: Text(
-          e.label,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: isActive ? Colors.blue : null,
-          ),
-          strutStyle: const StrutStyle(leading: 0.5),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final currentItem = useState<ScrollPickerItem>(list[2]);
@@ -88,17 +69,17 @@ class ScrollPicker extends HookWidget {
                   Container(
                     transform:
                         Transform.translate(offset: Offset(0, -20)).transform,
-                    child: const Icon(
+                    child: Icon(
                       Icons.keyboard_arrow_down_rounded,
-                      color: Colors.blue,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   Container(
                     transform:
                         Transform.translate(offset: Offset(0, 20)).transform,
-                    child: const Icon(
+                    child: Icon(
                       Icons.keyboard_arrow_up_rounded,
-                      color: Colors.blue,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ],
@@ -120,11 +101,47 @@ class ScrollPicker extends HookWidget {
                   }
                 },
                 children: list.map((e) {
-                  return itemWidget(e, currentItem.value.value == e.value);
+                  return ScrollPickerItemWidget(
+                    item: e,
+                    isActive: currentItem.value.value == e.value,
+                  );
                 }).toList(),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ScrollPickerItemWidget extends HookWidget {
+  final ScrollPickerItem item;
+  final bool isActive;
+
+  const ScrollPickerItemWidget({
+    super.key,
+    required this.item,
+    this.isActive = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return RotatedBox(
+      quarterTurns: 1,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        alignment: Alignment.center,
+        // color: Colors.amber,
+        child: Text(
+          item.label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: isActive
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.onSurface,
+          ),
+          strutStyle: const StrutStyle(leading: 0.5),
         ),
       ),
     );
