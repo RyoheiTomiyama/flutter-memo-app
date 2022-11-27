@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memo_app/view/about.dart';
 import 'package:memo_app/view/home.dart';
+import 'package:memo_app/view/ui.dart';
 import 'package:memo_app/view/video/video_list.dart';
 import 'package:memo_app/view/video/video_playback.dart';
 import 'package:memo_app/view/view_base.dart';
@@ -25,6 +26,7 @@ class Routes {
         about,
         player,
         videoGallery,
+        ui,
       ];
 
   static final home = NavigatorRoute(HomeView());
@@ -34,6 +36,8 @@ class Routes {
   static final player = NavigatorRoute(VideoPlaybackView());
 
   static final videoGallery = NavigatorRoute(VideoListView());
+
+  static final ui = NavigatorRoute(UiView());
 }
 
 final routes = {
