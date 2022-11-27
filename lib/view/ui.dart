@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:memo_app/ui/form/rating_bar.dart';
 import 'package:memo_app/ui/form/scroll_picker.dart';
 import 'package:memo_app/ui/form/switch_button.dart';
 import 'package:memo_app/view/view_base.dart';
@@ -40,6 +41,17 @@ class Ui extends HookWidget {
                   child: Text('回転数'),
                 ),
                 ScrollPicker(),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  child: Text('アプローチ'),
+                ),
+                RatingBar(),
               ],
             ),
           ),
