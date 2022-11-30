@@ -56,7 +56,7 @@ class ReportEditTrick extends HookWidget {
           ReportEditRow(
             label: '回転数',
             child: ScrollPicker(
-              itemExtent: 120,
+              itemExtent: 80,
               list: ReportSpin.values
                   .map(
                     (spin) => ScrollPickerItem(

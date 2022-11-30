@@ -66,20 +66,23 @@ class ScrollPicker extends HookWidget {
               child: Center(
                   child: Stack(
                 children: [
-                  Container(
-                    transform:
-                        Transform.translate(offset: Offset(0, -20)).transform,
-                    child: Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
+                  // Container(
+                  //   transform:
+                  //       Transform.translate(offset: Offset(0, -20)).transform,
+                  //   child: Icon(
+                  //     Icons.keyboard_arrow_down_rounded,
+                  //     color: Theme.of(context).colorScheme.primary,
+                  //   ),
+                  // ),
                   Container(
                     transform:
                         Transform.translate(offset: Offset(0, 20)).transform,
-                    child: Icon(
-                      Icons.keyboard_arrow_up_rounded,
-                      color: Theme.of(context).colorScheme.primary,
+                    child: RotatedBox(
+                      quarterTurns: 1,
+                      child: Icon(
+                        Icons.height_rounded,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   ),
                 ],
