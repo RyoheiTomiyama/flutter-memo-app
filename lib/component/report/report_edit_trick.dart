@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memo_app/domain/report/enum_report.dart';
+import 'package:memo_app/provider/report_edit_provider.dart';
 import 'package:memo_app/ui/form/scroll_picker.dart';
 import 'package:memo_app/ui/form/switch_button.dart';
 import 'package:memo_app/ui/report/report_edit_row.dart';
 
-class ReportEditTrick extends HookWidget {
+class ReportEditTrick extends HookConsumerWidget {
   const ReportEditTrick({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final reportEdit = ref.watch(reportEditProvider);
+    print(reportEdit.result);
+    print(reportEdit.trick);
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
       child: Column(

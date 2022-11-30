@@ -29,7 +29,12 @@ class Ui extends HookWidget {
                 Container(
                   child: Text('スタンス'),
                 ),
-                SwitchButton(),
+                SwitchButton(
+                  list: [
+                    SwitchButtonItem(label: 'メイン', value: '0'),
+                    SwitchButtonItem(label: 'スイッチ', value: '180'),
+                  ],
+                ),
               ],
             ),
           ),

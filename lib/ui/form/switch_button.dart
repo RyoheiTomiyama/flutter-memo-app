@@ -8,20 +8,16 @@ class SwitchButtonItem<T extends Object> {
   const SwitchButtonItem({required this.label, required this.value});
 }
 
-const defaultList = [
-  SwitchButtonItem(label: 'メイン', value: '0'),
-  SwitchButtonItem(label: 'スイッチ', value: '180'),
-];
-
-class SwitchButton extends HookWidget {
-  final List<SwitchButtonItem> list;
+class SwitchButton<R extends Object> extends HookWidget {
+  // final value;
+  final List<SwitchButtonItem<R>> list;
   final double height;
   final double itemExtent;
-  final void Function(SwitchButtonItem)? onChange;
+  final void Function(R)? onChange;
 
   const SwitchButton({
     Key? key,
-    this.list = defaultList,
+    required this.list,
     this.height = 50,
     this.itemExtent = 80.0,
     this.onChange,
@@ -29,7 +25,7 @@ class SwitchButton extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentItem = useState<SwitchButtonItem>(list[0]);
+    final currentItem = useState<SwitchButtonItem<R>>(list[0]);
 
     final toggleChange = useCallback(() {
       final index = list.indexOf(currentItem.value);
@@ -39,7 +35,7 @@ class SwitchButton extends HookWidget {
         currentItem.value = list[index + 1];
       }
       if (onChange != null) {
-        onChange!(list[index + 1]);
+        onChange!(list[index + 1].value as R);
       }
     }, [currentItem.value, list]);
 
