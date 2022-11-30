@@ -14,6 +14,46 @@ extension ReportStanceExt on ReportStance {
   }
 }
 
+enum ReportDirection {
+  frontside,
+  backside,
+  frontflip,
+  backflip,
+  frontCork,
+  backCork,
+  frontUnder,
+  backUnder,
+  frontRodeo,
+  backRodeo,
+}
+
+extension ReportDirectionExt on ReportDirection {
+  String get name {
+    switch (this) {
+      case ReportDirection.frontside:
+        return 'フロントサイド';
+      case ReportDirection.backside:
+        return 'バックサイド';
+      case ReportDirection.frontflip:
+        return 'フロントフリップ';
+      case ReportDirection.backflip:
+        return 'バックフリップ';
+      case ReportDirection.frontCork:
+        return 'フロントコーク';
+      case ReportDirection.backCork:
+        return 'バックコーク';
+      case ReportDirection.frontUnder:
+        return 'フロントアンダー';
+      case ReportDirection.backUnder:
+        return 'バックアンダー';
+      case ReportDirection.frontRodeo:
+        return 'フロントロデオ';
+      case ReportDirection.backRodeo:
+        return 'バックロデオ';
+    }
+  }
+}
+
 enum ReportSpin {
   s0,
   s180,
