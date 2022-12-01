@@ -11,8 +11,8 @@ class ReportEdit extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final reportEdit = ref.watch(reportEditProvider);
-    print(reportEdit.result);
-    print(reportEdit.trick);
+    // print(reportEdit.result);
+    // print(reportEdit.trick);
 
     return Expanded(
       child: Container(

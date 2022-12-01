@@ -67,8 +67,8 @@ class MyApp extends StatelessWidget {
         // primaryColor: Colors.amber,
         // primaryColor: Color(0xFFFEDBD0),
       ),
-      // initialRoute: Routes.videoGallery.name,
-      initialRoute: Routes.ui.name,
+      initialRoute: Routes.videoGallery.name,
+      // initialRoute: Routes.ui.name,
       routes: routes,
     );
   }

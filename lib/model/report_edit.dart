@@ -17,4 +17,8 @@ class ReportEditState with _$ReportEditState {
 
 class ReportEditModel extends StateNotifier<ReportEditState> {
   ReportEditModel() : super(ReportEditState());
+
+  setTrick(ReportTrick trick) {
+    state = state.copyWith(trick: trick);
+  }
 }

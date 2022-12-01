@@ -29,7 +29,7 @@ class Ui extends HookWidget {
                 Container(
                   child: Text('スタンス'),
                 ),
-                SwitchButton(
+                const SwitchButton(
                   list: [
                     SwitchButtonItem(label: 'メイン', value: '0'),
                     SwitchButtonItem(label: 'スイッチ', value: '180'),
@@ -45,7 +45,12 @@ class Ui extends HookWidget {
                 Container(
                   child: Text('回転数'),
                 ),
-                ScrollPicker(),
+                const ScrollPicker(
+                  list: [
+                    ScrollPickerItem(label: 'メイン', value: '0'),
+                    ScrollPickerItem(label: 'スイッチ', value: '180'),
+                  ],
+                ),
               ],
             ),
           ),

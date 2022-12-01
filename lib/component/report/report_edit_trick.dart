@@ -13,8 +13,9 @@ class ReportEditTrick extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final reportEdit = ref.watch(reportEditProvider);
-    print(reportEdit.result);
-    print(reportEdit.trick);
+    final reportEditNotifier = ref.watch(reportEditProvider.notifier);
+    // print(reportEdit.result);
+    // print(reportEdit.trick);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
@@ -30,10 +31,17 @@ class ReportEditTrick extends HookConsumerWidget {
                   ),
             ),
           ),
-          const ReportEditRow(
+          ReportEditRow(
             label: 'スタンス',
             child: SwitchButton(
-              list: [
+              value: reportEdit.trick.stance,
+              onChange: (stance) {
+                print(stance);
+                reportEditNotifier.setTrick(
+                  reportEdit.trick.copyWith(stance: stance),
+                );
+              },
+              list: const [
                 SwitchButtonItem(
                   label: 'メイン',
                   value: ReportStance.mainStance,
@@ -48,6 +56,13 @@ class ReportEditTrick extends HookConsumerWidget {
           ReportEditRow(
             label: '回転方向',
             child: ScrollPicker(
+              value: reportEdit.trick.direction,
+              onChange: (direction) {
+                print(direction);
+                reportEditNotifier.setTrick(
+                  reportEdit.trick.copyWith(direction: direction),
+                );
+              },
               itemExtent: 120,
               list: ReportDirection.values
                   .map(
@@ -62,6 +77,13 @@ class ReportEditTrick extends HookConsumerWidget {
           ReportEditRow(
             label: '回転数',
             child: ScrollPicker(
+              value: reportEdit.trick.spin,
+              onChange: (spin) {
+                print(spin);
+                reportEditNotifier.setTrick(
+                  reportEdit.trick.copyWith(spin: spin),
+                );
+              },
               itemExtent: 80,
               list: ReportSpin.values
                   .map(
