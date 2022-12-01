@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -11,6 +12,7 @@ class SwitchButtonItem<T extends Object> {
 class SwitchButton<R extends Object> extends HookWidget {
   // final value;
   final List<SwitchButtonItem<R>> list;
+  final R? value;
   final double height;
   final double itemExtent;
   final void Function(R)? onChange;
@@ -18,6 +20,7 @@ class SwitchButton<R extends Object> extends HookWidget {
   const SwitchButton({
     Key? key,
     required this.list,
+    this.value,
     this.height = 50,
     this.itemExtent = 80.0,
     this.onChange,
@@ -25,30 +28,25 @@ class SwitchButton<R extends Object> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentItem = useState<SwitchButtonItem<R>>(list[0]);
+    final currentValue = useState<R?>(value);
 
-    final toggleChange = useCallback(() {
-      final index = list.indexOf(currentItem.value);
-      if (index + 1 >= list.length) {
-        currentItem.value = list[0];
-      } else {
-        currentItem.value = list[index + 1];
-      }
-      if (onChange != null) {
-        onChange!(list[index + 1].value as R);
-      }
-    }, [currentItem.value, list]);
+    final handleChange = useCallback((R? v) {
+      currentValue.value = v;
+    }, [currentValue.value]);
 
-    Widget itemBuilder(SwitchButtonItem item, {isActive = false}) {
-      return Container(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-        child: Text(
-          item.label,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: isActive
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+    Widget itemBuilder(SwitchButtonItem<R> item, {isActive = false}) {
+      return InkWell(
+        onTap: () => handleChange(item.value),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          child: Text(
+            item.label,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: isActive
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            ),
           ),
         ),
       );
@@ -59,31 +57,24 @@ class SwitchButton<R extends Object> extends HookWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
-      child: InkWell(
-        onTap: toggleChange,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-          child: Row(
-            children: List.generate(
-              list.length * 2 - 1,
-              (index) => index,
-            ).map((i) {
-              if (i.isEven) {
-                return itemBuilder(
-                  list[i ~/ 2],
-                  isActive: currentItem.value == list[i ~/ 2],
-                );
-              } else {
-                return Container(
-                  width: 1,
-                  height: 16,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                );
-              }
-            }).toList(),
-          ),
-        ),
+      child: Row(
+        children: List.generate(
+          list.length * 2 - 1,
+          (index) => index,
+        ).map((i) {
+          if (i.isEven) {
+            return itemBuilder(
+              list[i ~/ 2],
+              isActive: currentValue.value == list[i ~/ 2].value,
+            );
+          } else {
+            return Container(
+              width: 1,
+              height: 16,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            );
+          }
+        }).toList(),
       ),
     );
   }
