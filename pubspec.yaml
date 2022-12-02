@@ -49,6 +49,8 @@ dependencies:
   intl: ^0.17.0
   photo_manager: ^2.5.0
   sqflite: ^2.2.0+3
+  collection: ^1.16.0
+  path: ^1.8.2
 
 dev_dependencies:
   flutter_test:

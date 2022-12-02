@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memo_app/application/gallery/interactor_gallery.dart';
+import 'package:memo_app/domain/gallery/entity_gallery.dart';
 import 'package:memo_app/interface/gallery/repository_gallery.dart';
 import 'package:video_player/video_player.dart';
 
@@ -18,6 +19,8 @@ class PlayerManagerState with _$PlayerManagerState {
     @Default(null) VideoPlayerController? controller,
     // Seekバーをドラッグ中はtrueにする
     @Default(false) bool isSeeking,
+    @Default(null) File? file,
+    @Default(null) Gallery? gallery,
   }) = _PlayerManagerState;
 
   bool get isInitialized {
@@ -112,7 +115,14 @@ class PlayerManagerModel extends StateNotifier<PlayerManagerState> {
 
   Future<File> getFileById(String id) async {
     final file = await galleryInteractor.getFileById(id);
+    state = state.copyWith(file: file);
     return file;
+  }
+
+  Future<Gallery> getGalleryById(String id) async {
+    final gallery = await galleryInteractor.getGalleryById(id);
+    state = state.copyWith(gallery: gallery);
+    return gallery;
   }
 
   @override

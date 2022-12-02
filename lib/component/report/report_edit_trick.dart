@@ -17,7 +17,7 @@ class ReportEditTrick extends HookConsumerWidget {
     // print(reportEdit.trick);
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

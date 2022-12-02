@@ -18,17 +18,21 @@ class Player extends HookConsumerWidget {
     final playerManagerNotifier = ref.watch(playerManagerProvider.notifier);
 
     final getFile = useMemoized(() async {
-      return await playerManagerNotifier.getFileById(id);
+      final results = await Future.wait([
+        playerManagerNotifier.getGalleryById(id),
+        playerManagerNotifier.getFileById(id),
+      ]);
+      return results[0];
     }, [id]);
 
     final getFileSnapshot = useFuture(getFile);
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (getFileSnapshot.data != null) {
-          print(getFileSnapshot.data);
+        if (playerManager.file != null) {
+          print(playerManager.file);
           playerManagerNotifier.addController(
-            VideoPlayerController.file(getFileSnapshot.data!),
+            VideoPlayerController.file(playerManager.file!),
           );
         }
       });
