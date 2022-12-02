@@ -21,4 +21,8 @@ class ReportEditModel extends StateNotifier<ReportEditState> {
   setTrick(ReportTrick trick) {
     state = state.copyWith(trick: trick);
   }
+
+  setResult(ReportResult result) {
+    state = state.copyWith(result: result);
+  }
 }

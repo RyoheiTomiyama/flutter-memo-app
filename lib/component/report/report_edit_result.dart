@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:memo_app/provider/report_edit_provider.dart';
 import 'package:memo_app/ui/form/rating_bar.dart';
 import 'package:memo_app/ui/report/report_edit_row.dart';
 
-class ReportEditResult extends HookWidget {
+class ReportEditResult extends HookConsumerWidget {
   const ReportEditResult({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final reportEdit = ref.watch(reportEditProvider);
+    final reportEditNotifier = ref.watch(reportEditProvider.notifier);
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
       child: Column(
@@ -24,19 +29,39 @@ class ReportEditResult extends HookWidget {
           ),
           ReportEditRow(
             label: 'アプローチ',
-            child: RatingBar(value: 5),
+            child: RatingBar(
+              value: reportEdit.result.approachScore,
+              onChange: (newValue) => reportEditNotifier.setResult(
+                reportEdit.result.copyWith(approachScore: newValue),
+              ),
+            ),
           ),
           ReportEditRow(
             label: '抜け',
-            child: RatingBar(value: 8),
+            child: RatingBar(
+              value: reportEdit.result.takeoffScore,
+              onChange: (newValue) => reportEditNotifier.setResult(
+                reportEdit.result.copyWith(takeoffScore: newValue),
+              ),
+            ),
           ),
           ReportEditRow(
             label: '空中',
-            child: RatingBar(),
+            child: RatingBar(
+              value: reportEdit.result.peakScore,
+              onChange: (newValue) => reportEditNotifier.setResult(
+                reportEdit.result.copyWith(peakScore: newValue),
+              ),
+            ),
           ),
           ReportEditRow(
             label: 'ランディング',
-            child: RatingBar(),
+            child: RatingBar(
+              value: reportEdit.result.landingScore,
+              onChange: (newValue) => reportEditNotifier.setResult(
+                reportEdit.result.copyWith(landingScore: newValue),
+              ),
+            ),
           ),
         ],
       ),

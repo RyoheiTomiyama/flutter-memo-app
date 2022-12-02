@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memo_app/domain/report/enum_report.dart';
 import 'package:memo_app/provider/report_edit_provider.dart';
@@ -36,7 +35,6 @@ class ReportEditTrick extends HookConsumerWidget {
             child: SwitchButton(
               value: reportEdit.trick.stance,
               onChange: (stance) {
-                print(stance);
                 reportEditNotifier.setTrick(
                   reportEdit.trick.copyWith(stance: stance),
                 );

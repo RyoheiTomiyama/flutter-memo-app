@@ -4,13 +4,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 // 0 ~ 10
 // Odd is half star
 class RatingBar extends HookWidget {
-  final int value;
+  final int? value;
   final int maxValue;
   final bool makeHalf;
   final void Function(int)? onChange;
   const RatingBar({
     super.key,
-    this.value = 3,
+    this.value = 0,
     this.maxValue = 10,
     this.makeHalf = true,
     this.onChange,
@@ -51,7 +51,7 @@ class RatingBar extends HookWidget {
       },
       child: Row(
         children: List.generate(count, (i) => i + 1).map(((i) {
-          if (i * num <= value) {
+          if (i * num <= (value ?? 0)) {
             return const RatingBarWidget(status: RatingWidgetStatus.full);
           } else if (makeHalf && i * num - 1 == value) {
             return const RatingBarWidget(status: RatingWidgetStatus.half);
