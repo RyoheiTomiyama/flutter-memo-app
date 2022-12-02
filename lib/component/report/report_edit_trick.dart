@@ -58,7 +58,6 @@ class ReportEditTrick extends HookConsumerWidget {
             child: ScrollPicker(
               value: reportEdit.trick.direction,
               onChange: (direction) {
-                print(direction);
                 reportEditNotifier.setTrick(
                   reportEdit.trick.copyWith(direction: direction),
                 );
@@ -79,7 +78,6 @@ class ReportEditTrick extends HookConsumerWidget {
             child: ScrollPicker(
               value: reportEdit.trick.spin,
               onChange: (spin) {
-                print(spin);
                 reportEditNotifier.setTrick(
                   reportEdit.trick.copyWith(spin: spin),
                 );

@@ -107,6 +107,14 @@ class ScrollPicker<R extends Object> extends HookWidget {
                       duration: const Duration(milliseconds: 100),
                       curve: Curves.easeInOut,
                     );
+                    // 場所が変わらないときだけ更新する必要がある
+                    if (controller.value.selectedItem == index &&
+                        currentValue.value == null) {
+                      currentValue.value = list[index].value;
+                      if (onChange != null && currentValue.value != null) {
+                        onChange!(currentValue.value!);
+                      }
+                    }
                   }
                 },
                 onTapUp: (details) {
