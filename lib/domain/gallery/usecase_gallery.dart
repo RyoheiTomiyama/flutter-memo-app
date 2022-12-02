@@ -18,4 +18,7 @@ abstract class IUsecaseGallery {
 
   // idから動画Fileを取得する
   Future<File> getFileById(String id);
+
+  // idから動画Galleryを取得する
+  Future<Gallery> getGalleryById(String id);
 }

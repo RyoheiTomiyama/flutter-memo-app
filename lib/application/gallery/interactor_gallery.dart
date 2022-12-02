@@ -40,4 +40,9 @@ class InteractorGallery implements IUsecaseGallery {
     final Gallery gallery = await galleryRepository.getGallery(id: id);
     return galleryRepository.getGalleryFile(gallery);
   }
+
+  @override
+  Future<Gallery> getGalleryById(String id) async {
+    return await galleryRepository.getGallery(id: id);
+  }
 }
