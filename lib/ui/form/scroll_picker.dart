@@ -101,15 +101,12 @@ class ScrollPicker<R extends Object> extends HookWidget {
                     controller.value.offset,
                   );
                   if (0 <= index && index < list.length) {
-                    currentValue.value = list[index].value;
+                    // 移動させるだけ、更新はListWheelScrollViewが検知するため
                     controller.value.animateToItem(
                       index,
                       duration: const Duration(milliseconds: 100),
                       curve: Curves.easeInOut,
                     );
-                    if (onChange != null && currentValue.value != null) {
-                      onChange!(currentValue.value!);
-                    }
                   }
                 },
                 onTapUp: (details) {
