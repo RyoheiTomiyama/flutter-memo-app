@@ -45,6 +45,7 @@ class ScrollPicker<R extends Object> extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final currentValue = useState<R?>(value);
+    final tapUpX = useState(0.0);
     // final currentItem = useState<ScrollPickerItem>(list[2]);
     final initialItem = useMemoized(() {
       return list
@@ -56,6 +57,17 @@ class ScrollPicker<R extends Object> extends HookWidget {
     final controller = useState(
       FixedExtentScrollController(initialItem: initialItem),
     );
+
+    final getClickedIndex = useCallback((
+      double listWidth,
+      double tapX,
+      double scrollX,
+    ) {
+      // 0番目の左の余白スペース
+      final spaceX = (listWidth - itemExtent) / 2;
+      final clickedX = tapX - spaceX + scrollX;
+      return (clickedX / itemExtent).floor();
+    }, [itemExtent]);
 
     return Expanded(
       child: Container(
@@ -81,26 +93,50 @@ class ScrollPicker<R extends Object> extends HookWidget {
             )),
             RotatedBox(
               quarterTurns: 3,
-              child: ListWheelScrollView(
-                controller: controller.value,
-                itemExtent: itemExtent,
-                diameterRatio: 100,
-                // overAndUnderCenterOpacity: 0.2,
-                physics: const HeavyFixedExtentScrollPhysics(),
-                renderChildrenOutsideViewport: false,
-                onSelectedItemChanged: (i) {
-                  // currentItem.value = list[i];
-                  currentValue.value = list[i].value;
-                  if (onChange != null && currentValue.value != null) {
-                    onChange!(currentValue.value!);
+              child: GestureDetector(
+                onTap: () {
+                  final index = getClickedIndex(
+                    controller.value.position.viewportDimension,
+                    tapUpX.value,
+                    controller.value.offset,
+                  );
+                  if (0 <= index && index < list.length) {
+                    currentValue.value = list[index].value;
+                    controller.value.animateToItem(
+                      index,
+                      duration: const Duration(milliseconds: 100),
+                      curve: Curves.easeInOut,
+                    );
+                    if (onChange != null && currentValue.value != null) {
+                      onChange!(currentValue.value!);
+                    }
                   }
                 },
-                children: list.map((e) {
-                  return ScrollPickerItemWidget(
-                    item: e,
-                    isActive: currentValue.value == e.value,
-                  );
-                }).toList(),
+                onTapUp: (details) {
+                  // Rotatedで90度回転しているからdyでX軸のポジションを取得
+                  tapUpX.value = details.localPosition.dy;
+                },
+                child: ListWheelScrollView(
+                  controller: controller.value,
+                  itemExtent: itemExtent,
+                  diameterRatio: 100,
+                  // overAndUnderCenterOpacity: 0.2,
+                  physics: const HeavyFixedExtentScrollPhysics(),
+                  renderChildrenOutsideViewport: false,
+                  onSelectedItemChanged: (i) {
+                    // currentItem.value = list[i];
+                    currentValue.value = list[i].value;
+                    if (onChange != null && currentValue.value != null) {
+                      onChange!(currentValue.value!);
+                    }
+                  },
+                  children: list.map((e) {
+                    return ScrollPickerItemWidget(
+                      item: e,
+                      isActive: currentValue.value == e.value,
+                    );
+                  }).toList(),
+                ),
               ),
             ),
           ],
@@ -110,8 +146,8 @@ class ScrollPicker<R extends Object> extends HookWidget {
   }
 }
 
-class ScrollPickerItemWidget extends HookWidget {
-  final ScrollPickerItem item;
+class ScrollPickerItemWidget<R extends Object> extends HookWidget {
+  final ScrollPickerItem<R> item;
   final bool isActive;
 
   const ScrollPickerItemWidget({
