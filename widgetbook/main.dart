@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:memo_app/component/editor/my_editor.dart';
+import 'package:memo_app/component/player/player.dart';
 import 'package:memo_app/ui/layout/swipe_up_panel.dart';
 import 'package:widgetbook/widgetbook.dart';
 
@@ -105,6 +106,171 @@ class HotreloadWidgetbook extends StatelessWidget {
                           Container(color: Colors.blue, height: 500),
                           Container(color: Colors.red, height: 500),
                         ]),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            WidgetbookComponent(
+              name: 'NestedScroll実験',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'Doc',
+                  builder: (context) {
+                    return Scaffold(
+                      // body: LayoutBuilder(
+                      //   builder: (context, constraints) {
+                      //     // SliverLayoutBuilder(builder: (context, constraints) {
+                      //     // // Panelの最大高
+                      //     // final maxHeight =
+                      //     //     constraints.maxHeight * maxChildSize;
+                      //     // // Panelが展開される高さ
+                      //     // final borderHeight =
+                      //     //     constraints.maxHeight * minChildSize;
+                      //     Widget buildBody({
+                      //       required double minHeight,
+                      //     }) {
+                      //       return ConstrainedBox(
+                      //         constraints: BoxConstraints(
+                      //             minHeight: minHeight, maxHeight: minHeight),
+                      //         // child: IntrinsicHeight(
+                      //         child: SizedBox(
+                      //           width: double.infinity,
+                      //           child: Container(),
+                      //         ),
+                      //         // ),
+                      //       );
+                      //     }
+
+                      //     return NestedScrollView(
+                      //       // Setting floatHeaderSlivers to true is required in order to float
+                      //       // the outer slivers over the inner scrollable.
+                      //       floatHeaderSlivers: false,
+                      //       headerSliverBuilder: (BuildContext context,
+                      //           bool innerBoxIsScrolled) {
+                      //         return <Widget>[
+                      //           SliverToBoxAdapter(
+                      //             child: GestureDetector(
+                      //               child: SingleChildScrollView(
+                      //                 // ここではスクロールさせない設定にしてGestureDetectorにイベントを渡してスクロール制御する
+                      //                 physics:
+                      //                     const NeverScrollableScrollPhysics(
+                      //                   parent: ClampingScrollPhysics(),
+                      //                 ),
+                      //                 // controller: sc,
+                      //                 child: Column(
+                      //                   children: [
+                      //                     buildBody(
+                      //                       minHeight: constraints.maxHeight,
+                      //                     ),
+                      //                     // buildPanel(context, maxHeight: maxHeight),
+                      //                   ],
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           // Player(id: ''),
+                      //         ];
+                      //       },
+                      //       body: ListView.builder(
+                      //         physics: ClampingScrollPhysics(),
+                      //         padding: const EdgeInsets.all(8),
+                      //         itemCount: 30,
+                      //         itemBuilder: (BuildContext context, int index) {
+                      //           return SizedBox(
+                      //             height: 50,
+                      //             child: Center(child: Text('Item $index')),
+                      //           );
+                      //         },
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
+                      body: LayoutBuilder(
+                        builder: (context, constraints) {
+                          // print(constraints.maxHeight);
+                          // SliverLayoutBuilder(builder: (context, constraints) {
+                          // // Panelの最大高
+                          // final maxHeight =
+                          //     constraints.maxHeight * maxChildSize;
+                          // // Panelが展開される高さ
+                          // final borderHeight =
+                          //     constraints.maxHeight * minChildSize;
+                          Widget buildBody({
+                            required double minHeight,
+                          }) {
+                            return ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  minHeight: minHeight, maxHeight: minHeight),
+                              // child: IntrinsicHeight(
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Container(
+                                  // height: constraints.maxHeight,
+                                  color: Colors.transparent,
+                                  child: Text('hello world'),
+                                ),
+                              ),
+                              // ),
+                            );
+                          }
+
+                          return NestedScrollView(
+                            // Setting floatHeaderSlivers to true is required in order to float
+                            // the outer slivers over the inner scrollable.
+                            floatHeaderSlivers: false,
+                            physics: const NeverScrollableScrollPhysics(
+                              parent: ClampingScrollPhysics(),
+                            ),
+                            headerSliverBuilder: (BuildContext context,
+                                bool innerBoxIsScrolled) {
+                              return <Widget>[
+                                SliverAppBar(
+                                  elevation: 0,
+                                  pinned: true,
+                                  backgroundColor: Colors.transparent,
+                                  flexibleSpace: Container(
+                                    height: 100,
+                                    // color: Colors.blue,
+                                    child: buildBody(
+                                        minHeight: constraints.maxHeight),
+                                  ),
+                                ),
+                                SliverToBoxAdapter(
+                                  child: Container(
+                                    height: constraints.maxHeight,
+                                    color: Colors.blue,
+                                    child: buildBody(
+                                        minHeight: constraints.maxHeight),
+                                  ),
+                                ),
+                                // Player(id: ''),
+                              ];
+                            },
+                            body: Container(
+                              height: 400,
+                              child: Stack(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+
+                                children: [
+                                  ListView.builder(
+                                    padding: const EdgeInsets.all(8),
+                                    itemCount: 30,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return SizedBox(
+                                        height: 50,
+                                        child:
+                                            Center(child: Text('Item $index')),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     );
                   },
