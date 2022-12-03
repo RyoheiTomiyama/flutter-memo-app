@@ -25,69 +25,67 @@ class ReportEdit extends HookConsumerWidget {
       return '';
     }, [playerManager.gallery?.modifiedAt]);
 
-    return Expanded(
-      child: Container(
-        // padding: const EdgeInsets.symmetric(horizontal: 20),
-        // color: Colors.amber,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.video_camera_back_outlined,
-                        size: 20,
+    return Container(
+      // padding: const EdgeInsets.symmetric(horizontal: 20),
+      // color: Colors.amber,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 32),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.video_camera_back_outlined,
+                      size: 20,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
+                    ),
+                    Padding(padding: EdgeInsets.only(left: 8)),
+                    Text(
+                      basename(playerManager.file?.path.toString() ?? ''),
+                      style: TextStyle(
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
                             .withOpacity(0.6),
                       ),
-                      Padding(padding: EdgeInsets.only(left: 8)),
-                      Text(
-                        basename(playerManager.file?.path.toString() ?? ''),
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.6),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.date_range_outlined,
-                        size: 20,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.date_range_outlined,
+                      size: 20,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
+                    ),
+                    Padding(padding: EdgeInsets.only(left: 8)),
+                    Text(
+                      formatDate,
+                      style: TextStyle(
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
                             .withOpacity(0.6),
                       ),
-                      Padding(padding: EdgeInsets.only(left: 8)),
-                      Text(
-                        formatDate,
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.6),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            ReportEditTrick(),
-            ReportEditResult(),
-          ],
-        ),
+          ),
+          ReportEditTrick(),
+          ReportEditResult(),
+        ],
       ),
     );
   }
