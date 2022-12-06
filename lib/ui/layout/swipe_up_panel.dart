@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:memo_app/ui/layout/swipe_up_panel/panel.dart';
 
 class SwipeUpPanel extends HookWidget {
   final double initialChildSize;
@@ -33,40 +34,13 @@ class SwipeUpPanel extends HookWidget {
     );
   }
 
-  Widget buildPanel(
-    BuildContext context, {
-    required double maxHeight,
-  }) {
-    return Container(
-      width: double.infinity,
-      height: maxHeight,
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      child: Column(
-        children: [
-          Center(
-            child: Container(
-              width: 30,
-              height: 3,
-              margin: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(1.5),
-              ),
-            ),
-          ),
-          child ?? Container(),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final isFullOpened = useState(false);
     final sc = scrollController ?? useScrollController();
+    final panelController = useScrollController();
     final drag = useState<Drag?>(null);
+    final panelDrag = useState<Drag?>(null);
 
     final cancelDrag = useCallback(() {
       drag.value?.cancel();
@@ -88,50 +62,68 @@ class SwipeUpPanel extends HookWidget {
         // excludeFromSemantics: true,
         onVerticalDragStart: (details) {
           drag.value = sc.position.drag(details, () {});
+          panelDrag.value = panelController.position.drag(details, () {});
+          isFullOpened.value = sc.position.pixels >= maxHeight;
         },
         onVerticalDragUpdate: (details) {
-          drag.value?.update(details);
+          isFullOpened.value = sc.position.pixels >= maxHeight;
+          if (isFullOpened.value) {
+            panelDrag.value?.update(details);
+          }
+          if (!isFullOpened.value ||
+              panelController.position.extentBefore == 0) {
+            drag.value?.update(details);
+          }
         },
         onVerticalDragEnd: (details) {
-          // print(details.velocity.pixelsPerSecond.dy);
-          if (sc.position.pixels < borderHeight) {
-            // panelがborderHeightより下にいるとき
-            if (details.velocity.pixelsPerSecond.dy < -6) {
-              // 上スクロール
-              scrollTo(borderHeight);
-              return;
-            }
-            if (details.velocity.pixelsPerSecond.dy > 6) {
-              // 下スクロール
-              scrollTo(0);
-              return;
-            }
-            // panelを閉じるか展開するか
-            if (sc.position.pixels > borderHeight / 2) {
-              scrollTo(borderHeight);
-              return;
-            } else {
-              scrollTo(0);
-              return;
-            }
+          isFullOpened.value = sc.position.pixels >= maxHeight;
+          if (isFullOpened.value &&
+              panelController.position.extentBefore != 0) {
+            panelDrag.value?.end(details);
+            panelDrag.value = null;
+            cancelDrag();
           } else {
-            // panelがborderHeightより上にいるとき
-            if (details.velocity.pixelsPerSecond.dy > 10) {
-              // 下スクロール
-
-              // velocityはスクロールの強さ
-              final simulation = ClampingScrollSimulation(
-                position: sc.position.pixels,
-                velocity: -details.velocity.pixelsPerSecond.dy,
-              );
-              if (simulation.x(10) < borderHeight) {
-                // 慣性スクロールの終了地点がboderHeightより下になるとき
+            panelDrag.value?.cancel();
+            panelDrag.value = null;
+            if (sc.position.pixels < borderHeight) {
+              // panelがborderHeightより下にいるとき
+              if (details.velocity.pixelsPerSecond.dy < -6) {
+                // 上スクロール
                 scrollTo(borderHeight);
+                return;
+              }
+              if (details.velocity.pixelsPerSecond.dy > 6) {
+                // 下スクロール
+                scrollTo(0);
+                return;
+              }
+              // panelを閉じるか展開するか
+              if (sc.position.pixels > borderHeight / 2) {
+                scrollTo(borderHeight);
+                return;
+              } else {
+                scrollTo(0);
+                return;
+              }
+            } else {
+              // panelがborderHeightより上にいるとき
+              if (details.velocity.pixelsPerSecond.dy > 10) {
+                // 下スクロール
+
+                // velocityはスクロールの強さ
+                final simulation = ClampingScrollSimulation(
+                  position: sc.position.pixels,
+                  velocity: -details.velocity.pixelsPerSecond.dy,
+                );
+                if (simulation.x(10) < borderHeight) {
+                  // 慣性スクロールの終了地点がboderHeightより下になるとき
+                  scrollTo(borderHeight);
+                }
               }
             }
+            drag.value?.end(details);
+            panelDrag.value = null;
           }
-          drag.value?.end(details);
-          drag.value = null;
         },
         child: SingleChildScrollView(
           // ここではスクロールさせない設定にしてGestureDetectorにイベントを渡してスクロール制御する
@@ -144,7 +136,12 @@ class SwipeUpPanel extends HookWidget {
               buildBody(
                 minHeight: constraints.maxHeight,
               ),
-              buildPanel(context, maxHeight: maxHeight),
+              Panel(
+                controller: panelController,
+                maxHeight: maxHeight,
+                isFullOpened: isFullOpened.value,
+                child: child,
+              ),
             ],
           ),
         ),
