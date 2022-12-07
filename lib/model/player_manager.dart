@@ -62,6 +62,13 @@ class PlayerManagerModel extends StateNotifier<PlayerManagerState> {
     state = state.copyWith(controller: con);
   }
 
+  void resetController() async {
+    if (state.controller != null) {
+      await state.controller!.dispose();
+      state = state.copyWith(controller: null);
+    }
+  }
+
   Future<void> initializeController({bool loop = true}) async {
     final _controller = state.controller;
     if (_controller == null) {

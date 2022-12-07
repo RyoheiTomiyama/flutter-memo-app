@@ -28,14 +28,21 @@ class Player extends HookConsumerWidget {
     final getFileSnapshot = useFuture(getFile);
 
     useEffect(() {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (playerManager.file != null) {
-          print(playerManager.file);
-          playerManagerNotifier.addController(
-            VideoPlayerController.file(playerManager.file!),
-          );
+      if (getFileSnapshot.hasData) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (playerManager.file != null) {
+            // print(playerManager.file);
+            playerManagerNotifier.addController(
+              VideoPlayerController.file(playerManager.file!),
+            );
+          }
+        });
+      }
+      return () {
+        if (getFileSnapshot.hasData) {
+          playerManagerNotifier.resetController();
         }
-      });
+      };
     }, [getFileSnapshot.hasData]);
 
     // useEffect(() {
