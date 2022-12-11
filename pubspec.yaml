@@ -51,6 +51,9 @@ dependencies:
   sqflite: ^2.2.0+3
   collection: ^1.16.0
   path: ^1.8.2
+  sqlite3_flutter_libs: ^0.5.12
+  path_provider: ^2.0.11
+  drift: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +67,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   freezed: ^2.2.0
   build_runner: ^2.3.0
+  drift_dev: ^2.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
