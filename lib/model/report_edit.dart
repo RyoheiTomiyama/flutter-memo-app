@@ -35,7 +35,6 @@ class ReportEditModel extends StateNotifier<ReportEditState> {
   Future<void> getReport(String videoId) async {
     final report =
         await reportInteractor.getReport(videoId) ?? Report(videoId: videoId);
-    print(report);
     state = state.copyWith(
       report: report,
       trick: report.trick,
@@ -47,6 +46,13 @@ class ReportEditModel extends StateNotifier<ReportEditState> {
     if (state.report == null) {
       return;
     }
-    reportInteractor.saveReport(state.report!);
+    state.report!.trick = state.trick;
+    state.report!.result = state.result;
+    final report = await reportInteractor.saveReport(state.report!);
+    state = state.copyWith(
+      report: report,
+      trick: report?.trick ?? const ReportTrick(),
+      result: report?.result ?? const ReportResult(),
+    );
   }
 }
