@@ -429,13 +429,13 @@ class ReportTrick extends DataClass implements Insertable<ReportTrick> {
   final ReportStance? stance;
   final ReportDirection? direction;
   final ReportSpin? spin;
-  final int? reportId;
+  final int reportId;
   const ReportTrick(
       {required this.id,
       this.stance,
       this.direction,
       this.spin,
-      this.reportId});
+      required this.reportId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -452,9 +452,7 @@ class ReportTrick extends DataClass implements Insertable<ReportTrick> {
       final converter = $ReportTricksTable.$converter2n;
       map['spin'] = Variable<int>(converter.toSql(spin));
     }
-    if (!nullToAbsent || reportId != null) {
-      map['report_id'] = Variable<int>(reportId);
-    }
+    map['report_id'] = Variable<int>(reportId);
     return map;
   }
 
@@ -467,9 +465,7 @@ class ReportTrick extends DataClass implements Insertable<ReportTrick> {
           ? const Value.absent()
           : Value(direction),
       spin: spin == null && nullToAbsent ? const Value.absent() : Value(spin),
-      reportId: reportId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(reportId),
+      reportId: Value(reportId),
     );
   }
 
@@ -481,7 +477,7 @@ class ReportTrick extends DataClass implements Insertable<ReportTrick> {
       stance: serializer.fromJson<ReportStance?>(json['stance']),
       direction: serializer.fromJson<ReportDirection?>(json['direction']),
       spin: serializer.fromJson<ReportSpin?>(json['spin']),
-      reportId: serializer.fromJson<int?>(json['reportId']),
+      reportId: serializer.fromJson<int>(json['reportId']),
     );
   }
   @override
@@ -492,7 +488,7 @@ class ReportTrick extends DataClass implements Insertable<ReportTrick> {
       'stance': serializer.toJson<ReportStance?>(stance),
       'direction': serializer.toJson<ReportDirection?>(direction),
       'spin': serializer.toJson<ReportSpin?>(spin),
-      'reportId': serializer.toJson<int?>(reportId),
+      'reportId': serializer.toJson<int>(reportId),
     };
   }
 
@@ -501,13 +497,13 @@ class ReportTrick extends DataClass implements Insertable<ReportTrick> {
           Value<ReportStance?> stance = const Value.absent(),
           Value<ReportDirection?> direction = const Value.absent(),
           Value<ReportSpin?> spin = const Value.absent(),
-          Value<int?> reportId = const Value.absent()}) =>
+          int? reportId}) =>
       ReportTrick(
         id: id ?? this.id,
         stance: stance.present ? stance.value : this.stance,
         direction: direction.present ? direction.value : this.direction,
         spin: spin.present ? spin.value : this.spin,
-        reportId: reportId.present ? reportId.value : this.reportId,
+        reportId: reportId ?? this.reportId,
       );
   @override
   String toString() {
@@ -539,7 +535,7 @@ class ReportTricksCompanion extends UpdateCompanion<ReportTrick> {
   final Value<ReportStance?> stance;
   final Value<ReportDirection?> direction;
   final Value<ReportSpin?> spin;
-  final Value<int?> reportId;
+  final Value<int> reportId;
   const ReportTricksCompanion({
     this.id = const Value.absent(),
     this.stance = const Value.absent(),
@@ -552,8 +548,8 @@ class ReportTricksCompanion extends UpdateCompanion<ReportTrick> {
     this.stance = const Value.absent(),
     this.direction = const Value.absent(),
     this.spin = const Value.absent(),
-    this.reportId = const Value.absent(),
-  });
+    required int reportId,
+  }) : reportId = Value(reportId);
   static Insertable<ReportTrick> custom({
     Expression<int>? id,
     Expression<int>? stance,
@@ -575,7 +571,7 @@ class ReportTricksCompanion extends UpdateCompanion<ReportTrick> {
       Value<ReportStance?>? stance,
       Value<ReportDirection?>? direction,
       Value<ReportSpin?>? spin,
-      Value<int?>? reportId}) {
+      Value<int>? reportId}) {
     return ReportTricksCompanion(
       id: id ?? this.id,
       stance: stance ?? this.stance,
@@ -656,8 +652,10 @@ class $ReportTricksTable extends ReportTricks
   final VerificationMeta _reportIdMeta = const VerificationMeta('reportId');
   @override
   late final GeneratedColumn<int> reportId = GeneratedColumn<int>(
-      'report_id', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      'report_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: 'UNIQUE');
   @override
   List<GeneratedColumn> get $columns => [id, stance, direction, spin, reportId];
   @override
@@ -678,6 +676,8 @@ class $ReportTricksTable extends ReportTricks
     if (data.containsKey('report_id')) {
       context.handle(_reportIdMeta,
           reportId.isAcceptableOrUnknown(data['report_id']!, _reportIdMeta));
+    } else if (isInserting) {
+      context.missing(_reportIdMeta);
     }
     return context;
   }
@@ -700,7 +700,7 @@ class $ReportTricksTable extends ReportTricks
           .options.types
           .read(DriftSqlType.int, data['${effectivePrefix}spin'])),
       reportId: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}report_id']),
+          .read(DriftSqlType.int, data['${effectivePrefix}report_id'])!,
     );
   }
 
@@ -729,14 +729,14 @@ class ReportResult extends DataClass implements Insertable<ReportResult> {
   final int? takeoffScore;
   final int? peakScore;
   final int? landingScore;
-  final int? reportId;
+  final int reportId;
   const ReportResult(
       {required this.id,
       this.approachScore,
       this.takeoffScore,
       this.peakScore,
       this.landingScore,
-      this.reportId});
+      required this.reportId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -753,9 +753,7 @@ class ReportResult extends DataClass implements Insertable<ReportResult> {
     if (!nullToAbsent || landingScore != null) {
       map['landing_score'] = Variable<int>(landingScore);
     }
-    if (!nullToAbsent || reportId != null) {
-      map['report_id'] = Variable<int>(reportId);
-    }
+    map['report_id'] = Variable<int>(reportId);
     return map;
   }
 
@@ -774,9 +772,7 @@ class ReportResult extends DataClass implements Insertable<ReportResult> {
       landingScore: landingScore == null && nullToAbsent
           ? const Value.absent()
           : Value(landingScore),
-      reportId: reportId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(reportId),
+      reportId: Value(reportId),
     );
   }
 
@@ -789,7 +785,7 @@ class ReportResult extends DataClass implements Insertable<ReportResult> {
       takeoffScore: serializer.fromJson<int?>(json['takeoffScore']),
       peakScore: serializer.fromJson<int?>(json['peakScore']),
       landingScore: serializer.fromJson<int?>(json['landingScore']),
-      reportId: serializer.fromJson<int?>(json['reportId']),
+      reportId: serializer.fromJson<int>(json['reportId']),
     );
   }
   @override
@@ -801,7 +797,7 @@ class ReportResult extends DataClass implements Insertable<ReportResult> {
       'takeoffScore': serializer.toJson<int?>(takeoffScore),
       'peakScore': serializer.toJson<int?>(peakScore),
       'landingScore': serializer.toJson<int?>(landingScore),
-      'reportId': serializer.toJson<int?>(reportId),
+      'reportId': serializer.toJson<int>(reportId),
     };
   }
 
@@ -811,7 +807,7 @@ class ReportResult extends DataClass implements Insertable<ReportResult> {
           Value<int?> takeoffScore = const Value.absent(),
           Value<int?> peakScore = const Value.absent(),
           Value<int?> landingScore = const Value.absent(),
-          Value<int?> reportId = const Value.absent()}) =>
+          int? reportId}) =>
       ReportResult(
         id: id ?? this.id,
         approachScore:
@@ -821,7 +817,7 @@ class ReportResult extends DataClass implements Insertable<ReportResult> {
         peakScore: peakScore.present ? peakScore.value : this.peakScore,
         landingScore:
             landingScore.present ? landingScore.value : this.landingScore,
-        reportId: reportId.present ? reportId.value : this.reportId,
+        reportId: reportId ?? this.reportId,
       );
   @override
   String toString() {
@@ -857,7 +853,7 @@ class ReportResultsCompanion extends UpdateCompanion<ReportResult> {
   final Value<int?> takeoffScore;
   final Value<int?> peakScore;
   final Value<int?> landingScore;
-  final Value<int?> reportId;
+  final Value<int> reportId;
   const ReportResultsCompanion({
     this.id = const Value.absent(),
     this.approachScore = const Value.absent(),
@@ -872,8 +868,8 @@ class ReportResultsCompanion extends UpdateCompanion<ReportResult> {
     this.takeoffScore = const Value.absent(),
     this.peakScore = const Value.absent(),
     this.landingScore = const Value.absent(),
-    this.reportId = const Value.absent(),
-  });
+    required int reportId,
+  }) : reportId = Value(reportId);
   static Insertable<ReportResult> custom({
     Expression<int>? id,
     Expression<int>? approachScore,
@@ -898,7 +894,7 @@ class ReportResultsCompanion extends UpdateCompanion<ReportResult> {
       Value<int?>? takeoffScore,
       Value<int?>? peakScore,
       Value<int?>? landingScore,
-      Value<int?>? reportId}) {
+      Value<int>? reportId}) {
     return ReportResultsCompanion(
       id: id ?? this.id,
       approachScore: approachScore ?? this.approachScore,
@@ -986,8 +982,10 @@ class $ReportResultsTable extends ReportResults
   final VerificationMeta _reportIdMeta = const VerificationMeta('reportId');
   @override
   late final GeneratedColumn<int> reportId = GeneratedColumn<int>(
-      'report_id', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      'report_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: 'UNIQUE');
   @override
   List<GeneratedColumn> get $columns =>
       [id, approachScore, takeoffScore, peakScore, landingScore, reportId];
@@ -1028,6 +1026,8 @@ class $ReportResultsTable extends ReportResults
     if (data.containsKey('report_id')) {
       context.handle(_reportIdMeta,
           reportId.isAcceptableOrUnknown(data['report_id']!, _reportIdMeta));
+    } else if (isInserting) {
+      context.missing(_reportIdMeta);
     }
     return context;
   }
@@ -1049,7 +1049,7 @@ class $ReportResultsTable extends ReportResults
       landingScore: attachedDatabase.options.types
           .read(DriftSqlType.int, data['${effectivePrefix}landing_score']),
       reportId: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}report_id']),
+          .read(DriftSqlType.int, data['${effectivePrefix}report_id'])!,
     );
   }
 

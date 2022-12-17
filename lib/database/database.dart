@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:memo_app/database/migrations/migration_strategy.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:memo_app/database/tables.dart';
@@ -30,6 +31,9 @@ class AppDatabase extends _$AppDatabase {
   // Migrations are covered later in the documentation.
   @override
   int get schemaVersion => 1;
+
+  @override
+  MigrationStrategy get migration => AppMigrationStragegy(this);
 }
 
 LazyDatabase _openConnection() {

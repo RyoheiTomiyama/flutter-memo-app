@@ -24,7 +24,7 @@ class ReportTricks extends Table {
   IntColumn get stance => intEnum<ReportStance>().nullable()();
   IntColumn get direction => intEnum<ReportDirection>().nullable()();
   IntColumn get spin => intEnum<ReportSpin>().nullable()();
-  IntColumn get reportId => integer().nullable()();
+  IntColumn get reportId => integer().unique()();
 }
 
 class ReportResults extends Table {
@@ -33,5 +33,5 @@ class ReportResults extends Table {
   IntColumn get takeoffScore => integer().nullable()();
   IntColumn get peakScore => integer().nullable()();
   IntColumn get landingScore => integer().nullable()();
-  IntColumn get reportId => integer().nullable()();
+  IntColumn get reportId => integer().unique()();
 }
