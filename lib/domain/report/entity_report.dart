@@ -4,8 +4,8 @@ import 'package:memo_app/domain/report/enum_report.dart';
 part 'entity_report.freezed.dart';
 
 class Report {
-  final String? id;
-  final String path;
+  final int? id;
+  final String videoId;
   final ReportTrick? trick;
   final ReportResult? result;
   late DateTime createdAt;
@@ -13,7 +13,7 @@ class Report {
 
   Report({
     this.id,
-    required this.path,
+    required this.videoId,
     this.trick,
     this.result,
     DateTime? createdAt,

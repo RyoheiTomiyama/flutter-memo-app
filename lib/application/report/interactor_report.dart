@@ -10,14 +10,19 @@ class InteractorReport implements IUsecaseReport {
   InteractorReport(this.reportRepository);
 
   @override
-  Future<Report> getReport(String id) async {
-    final report = await reportRepository.getReport(id);
+  Future<Report?> getReport(String videoId) async {
+    final report = await reportRepository.getReport(videoId);
     return report;
   }
 
   @override
-  Future<Report> saveReport(Report report) async {
-    final savedReport = await reportRepository.saveReport(report);
-    return savedReport;
+  Future<Report?> saveReport(Report report) async {
+    int id;
+    if (report.id == null) {
+      id = await reportRepository.createReport(report);
+    } else {
+      id = await reportRepository.updateReport(report);
+    }
+    return getReport(report.videoId);
   }
 }
