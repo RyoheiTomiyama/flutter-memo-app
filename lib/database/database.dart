@@ -9,6 +9,7 @@ import 'package:path/path.dart' as p;
 import 'package:memo_app/database/tables.dart';
 import 'package:memo_app/domain/report/enum_report.dart';
 
+import 'dao/reports_dao.dart';
 import 'dao/todos_dao.dart';
 
 // assuming that your file is called filename.dart. This will give an error at
@@ -19,7 +20,7 @@ part 'database.g.dart';
 // tables we just defined. We'll see how to use that database class in a moment.
 @DriftDatabase(
   tables: [Todos, Reports, ReportTricks, ReportResults],
-  daos: [TodosDao],
+  daos: [TodosDao, ReportsDao],
 )
 class AppDatabase extends _$AppDatabase {
   final QueryExecutor? e;

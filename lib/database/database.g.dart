@@ -379,7 +379,9 @@ class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
   @override
   late final GeneratedColumn<String> videoId = GeneratedColumn<String>(
       'video_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: 'UNIQUE');
   @override
   List<GeneratedColumn> get $columns => [id, videoId];
   @override
@@ -1064,6 +1066,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $ReportTricksTable reportTricks = $ReportTricksTable(this);
   late final $ReportResultsTable reportResults = $ReportResultsTable(this);
   late final TodosDao todosDao = TodosDao(this as AppDatabase);
+  late final ReportsDao reportsDao = ReportsDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, dynamic>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();

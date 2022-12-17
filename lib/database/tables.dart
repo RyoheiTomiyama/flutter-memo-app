@@ -16,7 +16,7 @@ class Todos extends Table {
 // @DataClassName('Category')
 class Reports extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get videoId => text()();
+  TextColumn get videoId => text().unique()();
 }
 
 class ReportTricks extends Table {

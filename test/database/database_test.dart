@@ -24,4 +24,18 @@ void main() {
       expect(database.todosDao, isNotNull);
     });
   });
+
+  group('database reports', () {
+    test('create report', () async {
+      final id = await database
+          .into(database.reports)
+          .insert(ReportsCompanion.insert(videoId: 'videoId'));
+      final report = await (database.select(database.reports)
+            ..where(
+              (tbl) => tbl.id.equals(id),
+            ))
+          .getSingleOrNull();
+      expect(id, equals(report?.id));
+    });
+  });
 }
