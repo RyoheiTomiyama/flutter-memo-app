@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ReportEditState {
+  Report? get report => throw _privateConstructorUsedError;
   ReportTrick get trick => throw _privateConstructorUsedError;
   ReportResult get result => throw _privateConstructorUsedError;
 
@@ -30,7 +31,7 @@ abstract class $ReportEditStateCopyWith<$Res> {
           ReportEditState value, $Res Function(ReportEditState) then) =
       _$ReportEditStateCopyWithImpl<$Res, ReportEditState>;
   @useResult
-  $Res call({ReportTrick trick, ReportResult result});
+  $Res call({Report? report, ReportTrick trick, ReportResult result});
 
   $ReportTrickCopyWith<$Res> get trick;
   $ReportResultCopyWith<$Res> get result;
@@ -49,10 +50,15 @@ class _$ReportEditStateCopyWithImpl<$Res, $Val extends ReportEditState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? report = freezed,
     Object? trick = null,
     Object? result = null,
   }) {
     return _then(_value.copyWith(
+      report: freezed == report
+          ? _value.report
+          : report // ignore: cast_nullable_to_non_nullable
+              as Report?,
       trick: null == trick
           ? _value.trick
           : trick // ignore: cast_nullable_to_non_nullable
@@ -89,7 +95,7 @@ abstract class _$$_ReportEditStateCopyWith<$Res>
       __$$_ReportEditStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({ReportTrick trick, ReportResult result});
+  $Res call({Report? report, ReportTrick trick, ReportResult result});
 
   @override
   $ReportTrickCopyWith<$Res> get trick;
@@ -108,10 +114,15 @@ class __$$_ReportEditStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? report = freezed,
     Object? trick = null,
     Object? result = null,
   }) {
     return _then(_$_ReportEditState(
+      report: freezed == report
+          ? _value.report
+          : report // ignore: cast_nullable_to_non_nullable
+              as Report?,
       trick: null == trick
           ? _value.trick
           : trick // ignore: cast_nullable_to_non_nullable
@@ -128,9 +139,13 @@ class __$$_ReportEditStateCopyWithImpl<$Res>
 
 class _$_ReportEditState extends _ReportEditState with DiagnosticableTreeMixin {
   _$_ReportEditState(
-      {this.trick = const ReportTrick(), this.result = const ReportResult()})
+      {this.report,
+      this.trick = const ReportTrick(),
+      this.result = const ReportResult()})
       : super._();
 
+  @override
+  final Report? report;
   @override
   @JsonKey()
   final ReportTrick trick;
@@ -140,7 +155,7 @@ class _$_ReportEditState extends _ReportEditState with DiagnosticableTreeMixin {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ReportEditState(trick: $trick, result: $result)';
+    return 'ReportEditState(report: $report, trick: $trick, result: $result)';
   }
 
   @override
@@ -148,6 +163,7 @@ class _$_ReportEditState extends _ReportEditState with DiagnosticableTreeMixin {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'ReportEditState'))
+      ..add(DiagnosticsProperty('report', report))
       ..add(DiagnosticsProperty('trick', trick))
       ..add(DiagnosticsProperty('result', result));
   }
@@ -157,12 +173,13 @@ class _$_ReportEditState extends _ReportEditState with DiagnosticableTreeMixin {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ReportEditState &&
+            (identical(other.report, report) || other.report == report) &&
             (identical(other.trick, trick) || other.trick == trick) &&
             (identical(other.result, result) || other.result == result));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, trick, result);
+  int get hashCode => Object.hash(runtimeType, report, trick, result);
 
   @JsonKey(ignore: true)
   @override
@@ -173,10 +190,13 @@ class _$_ReportEditState extends _ReportEditState with DiagnosticableTreeMixin {
 
 abstract class _ReportEditState extends ReportEditState {
   factory _ReportEditState(
-      {final ReportTrick trick,
+      {final Report? report,
+      final ReportTrick trick,
       final ReportResult result}) = _$_ReportEditState;
   _ReportEditState._() : super._();
 
+  @override
+  Report? get report;
   @override
   ReportTrick get trick;
   @override

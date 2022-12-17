@@ -39,7 +39,7 @@ class VideoPlayback extends HookWidget {
       body: SwipeUpPanel(
         maxChildSize: 0.8,
         body: Player(id: id),
-        child: ReportEdit(),
+        child: ReportEdit(videoId: id),
       ),
     );
   }

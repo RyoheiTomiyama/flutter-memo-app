@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,13 +11,39 @@ import 'package:memo_app/provider/report_edit_provider.dart';
 import 'package:path/path.dart';
 
 class ReportEdit extends HookConsumerWidget {
-  const ReportEdit({super.key});
+  final String videoId;
+  const ReportEdit({
+    super.key,
+    required this.videoId,
+  });
 
   @override
   Widget build(BuildContext context, ref) {
     final playerManager = ref.watch(playerManagerProvider);
+    final reportEditManagerNotifier = ref.watch(reportEditProvider.notifier);
     // print(reportEdit.result);
     // print(reportEdit.trick);
+
+    final getReport = useMemoized(() async {
+      final results = await Future.wait([
+        reportEditManagerNotifier.getReport(videoId),
+      ]);
+      return results[0];
+    }, [videoId]);
+    useFuture(getReport);
+
+    final intervalSaveReport = useCallback((Timer _timer) {
+      // reportEditManagerNotifier.saveReport();
+      print('save report');
+    }, [reportEditManagerNotifier]);
+
+    // 定期的に保存
+    useEffect(() {
+      final t = Timer.periodic(const Duration(seconds: 3), intervalSaveReport);
+      return () {
+        t.cancel();
+      };
+    }, [intervalSaveReport]);
 
     final formatDate = useMemoized(() {
       if (playerManager.gallery?.modifiedAt != null) {
