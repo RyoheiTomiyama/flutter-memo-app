@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ReportTrick {
-  String? get id => throw _privateConstructorUsedError;
+  int? get id => throw _privateConstructorUsedError;
   ReportStance? get stance => throw _privateConstructorUsedError;
   ReportDirection? get direction => throw _privateConstructorUsedError;
   ReportSpin? get spin => throw _privateConstructorUsedError;
@@ -33,7 +33,7 @@ abstract class $ReportTrickCopyWith<$Res> {
       _$ReportTrickCopyWithImpl<$Res, ReportTrick>;
   @useResult
   $Res call(
-      {String? id,
+      {int? id,
       ReportStance? stance,
       ReportDirection? direction,
       ReportSpin? spin});
@@ -61,7 +61,7 @@ class _$ReportTrickCopyWithImpl<$Res, $Val extends ReportTrick>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
       stance: freezed == stance
           ? _value.stance
           : stance // ignore: cast_nullable_to_non_nullable
@@ -87,7 +87,7 @@ abstract class _$$$ReportTrickCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? id,
+      {int? id,
       ReportStance? stance,
       ReportDirection? direction,
       ReportSpin? spin});
@@ -113,7 +113,7 @@ class __$$$ReportTrickCopyWithImpl<$Res>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
       stance: freezed == stance
           ? _value.stance
           : stance // ignore: cast_nullable_to_non_nullable
@@ -141,7 +141,7 @@ class _$$ReportTrick implements $ReportTrick {
 
   @override
   @JsonKey()
-  final String? id;
+  final int? id;
   @override
   @JsonKey()
   final ReportStance? stance;
@@ -181,13 +181,13 @@ class _$$ReportTrick implements $ReportTrick {
 
 abstract class $ReportTrick implements ReportTrick {
   const factory $ReportTrick(
-      {final String? id,
+      {final int? id,
       final ReportStance? stance,
       final ReportDirection? direction,
       final ReportSpin? spin}) = _$$ReportTrick;
 
   @override
-  String? get id;
+  int? get id;
   @override
   ReportStance? get stance;
   @override
@@ -202,7 +202,7 @@ abstract class $ReportTrick implements ReportTrick {
 
 /// @nodoc
 mixin _$ReportResult {
-  String? get id => throw _privateConstructorUsedError;
+  int? get id => throw _privateConstructorUsedError;
   int? get approachScore => throw _privateConstructorUsedError;
   int? get takeoffScore => throw _privateConstructorUsedError;
   int? get peakScore => throw _privateConstructorUsedError;
@@ -220,7 +220,7 @@ abstract class $ReportResultCopyWith<$Res> {
       _$ReportResultCopyWithImpl<$Res, ReportResult>;
   @useResult
   $Res call(
-      {String? id,
+      {int? id,
       int? approachScore,
       int? takeoffScore,
       int? peakScore,
@@ -250,7 +250,7 @@ class _$ReportResultCopyWithImpl<$Res, $Val extends ReportResult>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
       approachScore: freezed == approachScore
           ? _value.approachScore
           : approachScore // ignore: cast_nullable_to_non_nullable
@@ -280,7 +280,7 @@ abstract class _$$$ReportResultCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? id,
+      {int? id,
       int? approachScore,
       int? takeoffScore,
       int? peakScore,
@@ -308,7 +308,7 @@ class __$$$ReportResultCopyWithImpl<$Res>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
       approachScore: freezed == approachScore
           ? _value.approachScore
           : approachScore // ignore: cast_nullable_to_non_nullable
@@ -341,7 +341,7 @@ class _$$ReportResult implements $ReportResult {
 
   @override
   @JsonKey()
-  final String? id;
+  final int? id;
   @override
   @JsonKey()
   final int? approachScore;
@@ -389,14 +389,14 @@ class _$$ReportResult implements $ReportResult {
 
 abstract class $ReportResult implements ReportResult {
   const factory $ReportResult(
-      {final String? id,
+      {final int? id,
       final int? approachScore,
       final int? takeoffScore,
       final int? peakScore,
       final int? landingScore}) = _$$ReportResult;
 
   @override
-  String? get id;
+  int? get id;
   @override
   int? get approachScore;
   @override
