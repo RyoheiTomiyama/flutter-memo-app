@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -28,11 +27,9 @@ class SwitchButton<R extends Object> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentValue = useState<R?>(value);
-
-    final handleChange = useCallback((R? v) {
-      currentValue.value = v;
-    }, [currentValue.value]);
+    final handleChange = useCallback((R v) {
+      onChange?.call(v);
+    }, [onChange]);
 
     Widget itemBuilder(SwitchButtonItem<R> item, {isActive = false}) {
       return InkWell(
@@ -65,7 +62,7 @@ class SwitchButton<R extends Object> extends HookWidget {
           if (i.isEven) {
             return itemBuilder(
               list[i ~/ 2],
-              isActive: currentValue.value == list[i ~/ 2].value,
+              isActive: value == list[i ~/ 2].value,
             );
           } else {
             return Container(
