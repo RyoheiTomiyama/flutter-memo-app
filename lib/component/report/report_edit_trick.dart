@@ -13,8 +13,13 @@ class ReportEditTrick extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final reportEdit = ref.watch(reportEditProvider);
     final reportEditNotifier = ref.watch(reportEditProvider.notifier);
+
+    if (reportEdit.trick == null) {
+      return Container();
+    }
     // print(reportEdit.result);
     // print(reportEdit.trick);
+    print(reportEdit.trick!.direction);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 32),
@@ -22,7 +27,7 @@ class ReportEditTrick extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.only(bottom: 10),
             child: Text(
               'トリック',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -33,10 +38,10 @@ class ReportEditTrick extends HookConsumerWidget {
           ReportEditRow(
             label: 'スタンス',
             child: SwitchButton(
-              value: reportEdit.trick.stance,
+              value: reportEdit.trick!.stance,
               onChange: (stance) {
                 reportEditNotifier.setTrick(
-                  reportEdit.trick.copyWith(stance: stance),
+                  reportEdit.trick!.copyWith(stance: stance),
                 );
               },
               list: const [
@@ -54,10 +59,10 @@ class ReportEditTrick extends HookConsumerWidget {
           ReportEditRow(
             label: '回転方向',
             child: ScrollPicker(
-              value: reportEdit.trick.direction,
+              value: reportEdit.trick!.direction,
               onChange: (direction) {
                 reportEditNotifier.setTrick(
-                  reportEdit.trick.copyWith(direction: direction),
+                  reportEdit.trick!.copyWith(direction: direction),
                 );
               },
               itemExtent: 120,
@@ -74,10 +79,10 @@ class ReportEditTrick extends HookConsumerWidget {
           ReportEditRow(
             label: '回転数',
             child: ScrollPicker(
-              value: reportEdit.trick.spin,
+              value: reportEdit.trick!.spin,
               onChange: (spin) {
                 reportEditNotifier.setTrick(
-                  reportEdit.trick.copyWith(spin: spin),
+                  reportEdit.trick!.copyWith(spin: spin),
                 );
               },
               itemExtent: 80,

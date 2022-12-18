@@ -44,7 +44,6 @@ class ScrollPicker<R extends Object> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentValue = useState<R?>(value);
     final tapUpX = useState(0.0);
     // final currentItem = useState<ScrollPickerItem>(list[2]);
     final initialItem = useMemoized(() {
@@ -53,7 +52,8 @@ class ScrollPicker<R extends Object> extends HookWidget {
             (item) => item.value == value,
           )
           .clamp(0, list.length);
-    }, [list, currentValue.value]);
+    }, [list]);
+
     final controller = useState(
       FixedExtentScrollController(initialItem: initialItem),
     );
@@ -108,11 +108,9 @@ class ScrollPicker<R extends Object> extends HookWidget {
                       curve: Curves.easeInOut,
                     );
                     // 場所が変わらないときだけ更新する必要がある
-                    if (controller.value.selectedItem == index &&
-                        currentValue.value == null) {
-                      currentValue.value = list[index].value;
-                      if (onChange != null && currentValue.value != null) {
-                        onChange!(currentValue.value!);
+                    if (controller.value.selectedItem == index) {
+                      if (onChange != null) {
+                        onChange!(list[index].value);
                       }
                     }
                   }
@@ -129,16 +127,14 @@ class ScrollPicker<R extends Object> extends HookWidget {
                   physics: const HeavyFixedExtentScrollPhysics(),
                   renderChildrenOutsideViewport: false,
                   onSelectedItemChanged: (i) {
-                    // currentItem.value = list[i];
-                    currentValue.value = list[i].value;
-                    if (onChange != null && currentValue.value != null) {
-                      onChange!(currentValue.value!);
+                    if (onChange != null) {
+                      onChange!(list[i].value);
                     }
                   },
                   children: list.map((e) {
                     return ScrollPickerItemWidget(
                       item: e,
-                      isActive: currentValue.value == e.value,
+                      isActive: value == e.value,
                     );
                   }).toList(),
                 ),

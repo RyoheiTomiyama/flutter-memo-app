@@ -17,8 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ReportEditState {
   Report? get report => throw _privateConstructorUsedError;
-  ReportTrick get trick => throw _privateConstructorUsedError;
-  ReportResult get result => throw _privateConstructorUsedError;
+  ReportTrick? get trick => throw _privateConstructorUsedError;
+  ReportResult? get result => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ReportEditStateCopyWith<ReportEditState> get copyWith =>
@@ -31,10 +31,10 @@ abstract class $ReportEditStateCopyWith<$Res> {
           ReportEditState value, $Res Function(ReportEditState) then) =
       _$ReportEditStateCopyWithImpl<$Res, ReportEditState>;
   @useResult
-  $Res call({Report? report, ReportTrick trick, ReportResult result});
+  $Res call({Report? report, ReportTrick? trick, ReportResult? result});
 
-  $ReportTrickCopyWith<$Res> get trick;
-  $ReportResultCopyWith<$Res> get result;
+  $ReportTrickCopyWith<$Res>? get trick;
+  $ReportResultCopyWith<$Res>? get result;
 }
 
 /// @nodoc
@@ -51,37 +51,45 @@ class _$ReportEditStateCopyWithImpl<$Res, $Val extends ReportEditState>
   @override
   $Res call({
     Object? report = freezed,
-    Object? trick = null,
-    Object? result = null,
+    Object? trick = freezed,
+    Object? result = freezed,
   }) {
     return _then(_value.copyWith(
       report: freezed == report
           ? _value.report
           : report // ignore: cast_nullable_to_non_nullable
               as Report?,
-      trick: null == trick
+      trick: freezed == trick
           ? _value.trick
           : trick // ignore: cast_nullable_to_non_nullable
-              as ReportTrick,
-      result: null == result
+              as ReportTrick?,
+      result: freezed == result
           ? _value.result
           : result // ignore: cast_nullable_to_non_nullable
-              as ReportResult,
+              as ReportResult?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $ReportTrickCopyWith<$Res> get trick {
-    return $ReportTrickCopyWith<$Res>(_value.trick, (value) {
+  $ReportTrickCopyWith<$Res>? get trick {
+    if (_value.trick == null) {
+      return null;
+    }
+
+    return $ReportTrickCopyWith<$Res>(_value.trick!, (value) {
       return _then(_value.copyWith(trick: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $ReportResultCopyWith<$Res> get result {
-    return $ReportResultCopyWith<$Res>(_value.result, (value) {
+  $ReportResultCopyWith<$Res>? get result {
+    if (_value.result == null) {
+      return null;
+    }
+
+    return $ReportResultCopyWith<$Res>(_value.result!, (value) {
       return _then(_value.copyWith(result: value) as $Val);
     });
   }
@@ -95,12 +103,12 @@ abstract class _$$_ReportEditStateCopyWith<$Res>
       __$$_ReportEditStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Report? report, ReportTrick trick, ReportResult result});
+  $Res call({Report? report, ReportTrick? trick, ReportResult? result});
 
   @override
-  $ReportTrickCopyWith<$Res> get trick;
+  $ReportTrickCopyWith<$Res>? get trick;
   @override
-  $ReportResultCopyWith<$Res> get result;
+  $ReportResultCopyWith<$Res>? get result;
 }
 
 /// @nodoc
@@ -115,22 +123,22 @@ class __$$_ReportEditStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? report = freezed,
-    Object? trick = null,
-    Object? result = null,
+    Object? trick = freezed,
+    Object? result = freezed,
   }) {
     return _then(_$_ReportEditState(
       report: freezed == report
           ? _value.report
           : report // ignore: cast_nullable_to_non_nullable
               as Report?,
-      trick: null == trick
+      trick: freezed == trick
           ? _value.trick
           : trick // ignore: cast_nullable_to_non_nullable
-              as ReportTrick,
-      result: null == result
+              as ReportTrick?,
+      result: freezed == result
           ? _value.result
           : result // ignore: cast_nullable_to_non_nullable
-              as ReportResult,
+              as ReportResult?,
     ));
   }
 }
@@ -138,20 +146,14 @@ class __$$_ReportEditStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_ReportEditState extends _ReportEditState with DiagnosticableTreeMixin {
-  _$_ReportEditState(
-      {this.report,
-      this.trick = const ReportTrick(),
-      this.result = const ReportResult()})
-      : super._();
+  _$_ReportEditState({this.report, this.trick, this.result}) : super._();
 
   @override
   final Report? report;
   @override
-  @JsonKey()
-  final ReportTrick trick;
+  final ReportTrick? trick;
   @override
-  @JsonKey()
-  final ReportResult result;
+  final ReportResult? result;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -191,16 +193,16 @@ class _$_ReportEditState extends _ReportEditState with DiagnosticableTreeMixin {
 abstract class _ReportEditState extends ReportEditState {
   factory _ReportEditState(
       {final Report? report,
-      final ReportTrick trick,
-      final ReportResult result}) = _$_ReportEditState;
+      final ReportTrick? trick,
+      final ReportResult? result}) = _$_ReportEditState;
   _ReportEditState._() : super._();
 
   @override
   Report? get report;
   @override
-  ReportTrick get trick;
+  ReportTrick? get trick;
   @override
-  ReportResult get result;
+  ReportResult? get result;
   @override
   @JsonKey(ignore: true)
   _$$_ReportEditStateCopyWith<_$_ReportEditState> get copyWith =>

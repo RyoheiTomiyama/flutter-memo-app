@@ -13,6 +13,10 @@ class ReportEditResult extends HookConsumerWidget {
     final reportEdit = ref.watch(reportEditProvider);
     final reportEditNotifier = ref.watch(reportEditProvider.notifier);
 
+    if (reportEdit.result == null) {
+      return Container();
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
       child: Column(
@@ -30,36 +34,36 @@ class ReportEditResult extends HookConsumerWidget {
           ReportEditRow(
             label: 'アプローチ',
             child: RatingBar(
-              value: reportEdit.result.approachScore,
+              value: reportEdit.result!.approachScore,
               onChange: (newValue) => reportEditNotifier.setResult(
-                reportEdit.result.copyWith(approachScore: newValue),
+                reportEdit.result!.copyWith(approachScore: newValue),
               ),
             ),
           ),
           ReportEditRow(
             label: '抜け',
             child: RatingBar(
-              value: reportEdit.result.takeoffScore,
+              value: reportEdit.result!.takeoffScore,
               onChange: (newValue) => reportEditNotifier.setResult(
-                reportEdit.result.copyWith(takeoffScore: newValue),
+                reportEdit.result!.copyWith(takeoffScore: newValue),
               ),
             ),
           ),
           ReportEditRow(
             label: '空中',
             child: RatingBar(
-              value: reportEdit.result.peakScore,
+              value: reportEdit.result!.peakScore,
               onChange: (newValue) => reportEditNotifier.setResult(
-                reportEdit.result.copyWith(peakScore: newValue),
+                reportEdit.result!.copyWith(peakScore: newValue),
               ),
             ),
           ),
           ReportEditRow(
             label: 'ランディング',
             child: RatingBar(
-              value: reportEdit.result.landingScore,
+              value: reportEdit.result!.landingScore,
               onChange: (newValue) => reportEditNotifier.setResult(
-                reportEdit.result.copyWith(landingScore: newValue),
+                reportEdit.result!.copyWith(landingScore: newValue),
               ),
             ),
           ),

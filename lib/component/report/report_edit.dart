@@ -33,7 +33,7 @@ class ReportEdit extends HookConsumerWidget {
     useFuture(getReport);
 
     final intervalSaveReport = useCallback((Timer _timer) {
-      // reportEditManagerNotifier.saveReport();
+      reportEditManagerNotifier.saveReport();
       print('save report');
     }, [reportEditManagerNotifier]);
 
@@ -52,6 +52,12 @@ class ReportEdit extends HookConsumerWidget {
       }
       return '';
     }, [playerManager.gallery?.modifiedAt]);
+
+    useEffect(() {
+      return () {
+        reportEditManagerNotifier.reset();
+      };
+    }, []);
 
     return Container(
       // padding: const EdgeInsets.symmetric(horizontal: 20),

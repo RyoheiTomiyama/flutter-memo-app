@@ -14,8 +14,8 @@ class ReportEditState with _$ReportEditState {
 
   factory ReportEditState({
     Report? report,
-    @Default(ReportTrick()) ReportTrick trick,
-    @Default(ReportResult()) ReportResult result,
+    ReportTrick? trick,
+    ReportResult? result,
   }) = _ReportEditState;
 }
 
@@ -32,6 +32,14 @@ class ReportEditModel extends StateNotifier<ReportEditState> {
     state = state.copyWith(result: result);
   }
 
+  Future<void> reset() async {
+    state = state.copyWith(
+      report: null,
+      trick: null,
+      result: null,
+    );
+  }
+
   Future<void> getReport(String videoId) async {
     final report =
         await reportInteractor.getReport(videoId) ?? Report(videoId: videoId);
@@ -46,13 +54,13 @@ class ReportEditModel extends StateNotifier<ReportEditState> {
     if (state.report == null) {
       return;
     }
-    state.report!.trick = state.trick;
-    state.report!.result = state.result;
+    state.report!.trick = state.trick ?? const ReportTrick();
+    state.report!.result = state.result ?? const ReportResult();
     final report = await reportInteractor.saveReport(state.report!);
     state = state.copyWith(
       report: report,
-      trick: report?.trick ?? const ReportTrick(),
-      result: report?.result ?? const ReportResult(),
+      trick: report?.trick,
+      result: report?.result,
     );
   }
 }
