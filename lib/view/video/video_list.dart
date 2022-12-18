@@ -8,10 +8,10 @@ import 'package:memo_app/view/view_base.dart';
 
 class VideoListView implements ViewBase {
   @override
-  ViewBuilder get builder => (context, {args}) => const VideoList();
+  ViewBuilder get builder => (context, state) => const VideoList();
 
   @override
-  String get name => '/video-gallery';
+  String get path => '/video';
 }
 
 class VideoList extends HookConsumerWidget {

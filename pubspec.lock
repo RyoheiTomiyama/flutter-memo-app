@@ -332,7 +332,7 @@ packages:
     source: hosted
     version: "2.1.0"
   go_router:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: go_router
       url: "https://pub.dartlang.org"

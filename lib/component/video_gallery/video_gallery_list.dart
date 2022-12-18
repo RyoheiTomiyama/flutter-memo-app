@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:memo_app/component/video_gallery/video_gallery_image.dart';
@@ -98,11 +99,10 @@ class VideoGalleryList extends HookConsumerWidget {
                       return Ink(
                         child: InkWell(
                           onTap: () {
-                            Navigator.pushNamed(
-                              context,
+                            context.pushNamed(
                               AppRoute.player.name,
-                              arguments:
-                                  VideoPlaybackArgument(id: items[index].id),
+                              params: VideoPlaybackArgument(id: items[index].id)
+                                  .toMap(),
                             );
                           },
                           child: VideoGalleryImage(

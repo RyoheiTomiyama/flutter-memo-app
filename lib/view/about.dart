@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memo_app/provider/counter_provider.dart';
+import 'package:memo_app/routes.dart';
 import 'package:memo_app/view/view_base.dart';
 
 class AboutView implements ViewBase {
   @override
-  ViewBuilder get builder => ((context, {args}) {
+  ViewBuilder get builder => (context, state) {
         return const About(
           title: 'This is About',
         );
-      });
+      };
 
   @override
-  String get name => '/about';
+  String get path => '/about';
 }
 
 class About extends HookConsumerWidget {
@@ -33,7 +35,7 @@ class About extends HookConsumerWidget {
             icon: const Icon(Icons.arrow_forward),
             tooltip: 'Next',
             onPressed: () {
-              Navigator.pushNamed(context, '/about');
+              context.goNamed(AppRoute.about.name);
             },
           ),
         ],

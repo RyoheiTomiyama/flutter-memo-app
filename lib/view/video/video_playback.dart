@@ -9,23 +9,26 @@ class VideoPlaybackArgument extends Object {
   final String id;
 
   const VideoPlaybackArgument({required this.id});
+  Map<String, String> toMap() {
+    return {
+      'id': id,
+    };
+  }
 }
 
 class VideoPlaybackView implements ViewBase {
   @override
-  get builder => (context, {args}) {
-        if (args is! VideoPlaybackArgument) {
-          if (Navigator.canPop(context)) {
-            Navigator.of(context).pop();
-          }
+  get builder => (context, state) {
+        final id = state.params['id'];
+        if (id == null) {
           return Container();
         } else {
-          return VideoPlayback(id: args.id);
+          return VideoPlayback(id: id);
         }
       };
 
   @override
-  String get name => '/player';
+  String get path => '/video/:id';
 }
 
 class VideoPlayback extends HookWidget {

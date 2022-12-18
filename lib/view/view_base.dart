@@ -1,14 +1,15 @@
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 
-typedef ViewBuilder<T extends Object?> = Widget Function(
-  BuildContext context, {
-  T? args,
-});
+typedef ViewBuilder = Widget Function(
+  BuildContext context,
+  GoRouterState state,
+);
 
 class ViewBase<T> {
-  final String name;
+  final String path;
 
-  final ViewBuilder<T> builder;
+  final ViewBuilder builder;
 
-  const ViewBase(this.name, this.builder);
+  const ViewBase(this.path, this.builder);
 }

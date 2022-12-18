@@ -7,10 +7,10 @@ import 'package:memo_app/view/view_base.dart';
 
 class UiView implements ViewBase {
   @override
-  ViewBuilder get builder => (context, {args}) => const Ui();
+  ViewBuilder get builder => (context, state) => const Ui();
 
   @override
-  String get name => '/ui';
+  String get path => '/ui';
 }
 
 class Ui extends HookWidget {

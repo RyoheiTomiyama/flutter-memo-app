@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memo_app/component/editor/my_editor.dart';
+import 'package:memo_app/routes.dart';
 import 'package:memo_app/view/view_base.dart';
 
 class HomeView implements ViewBase {
   @override
-  ViewBuilder get builder => (context, {args}) {
+  ViewBuilder get builder => (context, state) {
         return const Home(
           title: 'This is Home',
         );
       };
 
   @override
-  String get name => '/';
+  String get path => '/';
 }
 
 //
@@ -31,7 +33,7 @@ class Home extends HookConsumerWidget {
             icon: const Icon(Icons.arrow_forward),
             tooltip: 'Next',
             onPressed: () {
-              Navigator.pushNamed(context, '/overlay');
+              context.goNamed(AppRoute.about.name);
             },
           ),
         ],
