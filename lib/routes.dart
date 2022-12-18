@@ -6,6 +6,7 @@ import 'package:memo_app/view/video/video_list.dart';
 import 'package:memo_app/view/video/video_playback.dart';
 import 'package:memo_app/view/view_base.dart';
 
+// argumentsを渡すため
 class NavigatorRoute {
   late String name;
 
@@ -20,26 +21,28 @@ class NavigatorRoute {
   }
 }
 
-class Routes {
-  static List<NavigatorRoute> get values => [
-        home,
-        about,
-        player,
-        videoGallery,
-        ui,
-      ];
+enum AppRoute {
+  home,
+  about,
+  player,
+  videoGallery,
+  ui,
+}
 
-  static final home = NavigatorRoute(HomeView());
+extension AppRouteExt on AppRoute {
+  String get name => _routes[this]?.name ?? '';
+  // TODO error page
+  WidgetBuilder get builder => _routes[this]?.builder ?? (_) => Container();
 
-  static final about = NavigatorRoute(AboutView());
-
-  static final player = NavigatorRoute(VideoPlaybackView());
-
-  static final videoGallery = NavigatorRoute(VideoListView());
-
-  static final ui = NavigatorRoute(UiView());
+  static final _routes = {
+    AppRoute.home: NavigatorRoute(HomeView()),
+    AppRoute.about: NavigatorRoute(AboutView()),
+    AppRoute.player: NavigatorRoute(VideoPlaybackView()),
+    AppRoute.videoGallery: NavigatorRoute(VideoListView()),
+    AppRoute.ui: NavigatorRoute(UiView()),
+  };
 }
 
 final routes = {
-  for (final r in Routes.values) r.name: r.builder,
+  for (final r in AppRoute.values) r.name: r.builder,
 };

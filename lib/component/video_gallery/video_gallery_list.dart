@@ -100,7 +100,7 @@ class VideoGalleryList extends HookConsumerWidget {
                           onTap: () {
                             Navigator.pushNamed(
                               context,
-                              Routes.player.name,
+                              AppRoute.player.name,
                               arguments:
                                   VideoPlaybackArgument(id: items[index].id),
                             );
