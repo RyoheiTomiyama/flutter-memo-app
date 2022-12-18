@@ -32,19 +32,6 @@ class ReportEdit extends HookConsumerWidget {
     }, [videoId]);
     useFuture(getReport);
 
-    final intervalSaveReport = useCallback((Timer _timer) {
-      reportEditManagerNotifier.saveReport();
-      print('save report');
-    }, [reportEditManagerNotifier]);
-
-    // 定期的に保存
-    useEffect(() {
-      final t = Timer.periodic(const Duration(seconds: 3), intervalSaveReport);
-      return () {
-        t.cancel();
-      };
-    }, [intervalSaveReport]);
-
     final formatDate = useMemoized(() {
       if (playerManager.gallery?.modifiedAt != null) {
         final format = DateFormat.yMMMd().add_Hms();
@@ -52,14 +39,6 @@ class ReportEdit extends HookConsumerWidget {
       }
       return '';
     }, [playerManager.gallery?.modifiedAt]);
-
-    useEffect(() {
-      return () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          reportEditManagerNotifier.reset();
-        });
-      };
-    }, []);
 
     return Container(
       // padding: const EdgeInsets.symmetric(horizontal: 20),
