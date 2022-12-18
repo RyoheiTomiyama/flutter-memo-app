@@ -55,7 +55,9 @@ class ReportEdit extends HookConsumerWidget {
 
     useEffect(() {
       return () {
-        reportEditManagerNotifier.reset();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          reportEditManagerNotifier.reset();
+        });
       };
     }, []);
 
