@@ -101,17 +101,13 @@ class ScrollPicker<R extends Object> extends HookWidget {
                     controller.value.offset,
                   );
                   if (0 <= index && index < list.length) {
-                    // 移動させるだけ、更新はListWheelScrollViewが検知するため
                     controller.value.animateToItem(
                       index,
                       duration: const Duration(milliseconds: 100),
                       curve: Curves.easeInOut,
                     );
-                    // 場所が変わらないときだけ更新する必要がある
-                    if (controller.value.selectedItem == index) {
-                      if (onChange != null) {
-                        onChange!(list[index].value);
-                      }
+                    if (onChange != null) {
+                      onChange!(list[index].value);
                     }
                   }
                 },
@@ -126,11 +122,6 @@ class ScrollPicker<R extends Object> extends HookWidget {
                   // overAndUnderCenterOpacity: 0.2,
                   physics: const HeavyFixedExtentScrollPhysics(),
                   renderChildrenOutsideViewport: false,
-                  onSelectedItemChanged: (i) {
-                    if (onChange != null) {
-                      onChange!(list[i].value);
-                    }
-                  },
                   children: list.map((e) {
                     return ScrollPickerItemWidget(
                       item: e,
