@@ -19,7 +19,6 @@ class ReportEditTrick extends HookConsumerWidget {
     }
     // print(reportEdit.result);
     // print(reportEdit.trick);
-    print(reportEdit.trick!.direction);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 32),
