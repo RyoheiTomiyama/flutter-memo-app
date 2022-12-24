@@ -27,6 +27,7 @@ class GalleryGridView extends HookWidget {
       itemCount: itemCount,
       gridDelegate: gridDelegate,
       itemBuilder: itemBuilder,
+      cacheExtent: 400,
     );
   }
 }
