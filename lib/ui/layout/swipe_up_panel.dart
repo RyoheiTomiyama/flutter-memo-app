@@ -138,7 +138,8 @@ class SwipeUpPanel extends HookWidget {
               ),
               Panel(
                 controller: panelController,
-                maxHeight: maxHeight,
+                // NOTE iphoneSEだと誤差が出てmaxHeightに届かずにPanel内部のスクロールができなくなっていたので、0.1追加しておく
+                maxHeight: maxHeight + 0.1,
                 isFullOpened: isFullOpened.value,
                 child: child,
               ),
