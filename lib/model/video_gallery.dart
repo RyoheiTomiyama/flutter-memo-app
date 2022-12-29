@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,7 +16,7 @@ class VideoGalleryState with _$VideoGalleryState {
   const factory VideoGalleryState({
     @Default([]) List<Gallery> galleryList,
     @Default([]) List<GalleryAlbum> albumList,
-    @Default(null) GalleryAlbum? currentAlbum,
+    @Default(null) String? currentAlbumId,
   }) = _VideoGalleryState;
 }
 
@@ -26,16 +27,18 @@ class VideoGalleryModel extends StateNotifier<VideoGalleryState> {
 
   Future<void> getAlbum() async {
     final albums = await galleryInteractor.getGalleryAlbums();
-    var currentAlbum = state.currentAlbum;
-    currentAlbum ??= albums.firstWhere((element) => element.isAll);
+    final currentAlbumId = state.currentAlbumId ??
+        albums.firstWhereOrNull((element) => element.isAll)?.id;
     state = state.copyWith(
       albumList: albums,
-      currentAlbum: currentAlbum,
+      currentAlbumId: currentAlbumId,
     );
   }
 
   Future<void> getGallery() async {
-    final galleries = await galleryInteractor.getGalleries(state.currentAlbum);
+    final currentAlbum =
+        state.albumList.firstWhereOrNull((el) => el.id == state.currentAlbumId);
+    final galleries = await galleryInteractor.getGalleries(currentAlbum);
     state = state.copyWith(galleryList: galleries);
   }
 
@@ -44,7 +47,7 @@ class VideoGalleryModel extends StateNotifier<VideoGalleryState> {
     return thumbnail;
   }
 
-  void changeAlbum(GalleryAlbum album) {
-    state = state.copyWith(currentAlbum: album);
+  void changeAlbum(String albumId) {
+    state = state.copyWith(currentAlbumId: albumId);
   }
 }

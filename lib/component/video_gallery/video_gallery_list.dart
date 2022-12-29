@@ -67,12 +67,12 @@ class VideoGalleryList extends HookConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               children: [
-                GalleryAlbumDropdown<GalleryAlbum>(
-                  value: videoGallery.currentAlbum,
-                  items: albumList.map<DropdownMenuItem<GalleryAlbum>>(
+                GalleryAlbumDropdown<String>(
+                  value: videoGallery.currentAlbumId,
+                  items: albumList.map<DropdownMenuItem<String>>(
                     (item) {
                       return DropdownMenuItem(
-                        value: item,
+                        value: item.id,
                         child: Text(item.name),
                       );
                     },

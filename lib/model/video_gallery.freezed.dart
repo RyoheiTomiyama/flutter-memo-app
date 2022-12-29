@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$VideoGalleryState {
   List<Gallery> get galleryList => throw _privateConstructorUsedError;
   List<GalleryAlbum> get albumList => throw _privateConstructorUsedError;
-  GalleryAlbum? get currentAlbum => throw _privateConstructorUsedError;
+  String? get currentAlbumId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $VideoGalleryStateCopyWith<VideoGalleryState> get copyWith =>
@@ -34,7 +34,7 @@ abstract class $VideoGalleryStateCopyWith<$Res> {
   $Res call(
       {List<Gallery> galleryList,
       List<GalleryAlbum> albumList,
-      GalleryAlbum? currentAlbum});
+      String? currentAlbumId});
 }
 
 /// @nodoc
@@ -52,7 +52,7 @@ class _$VideoGalleryStateCopyWithImpl<$Res, $Val extends VideoGalleryState>
   $Res call({
     Object? galleryList = null,
     Object? albumList = null,
-    Object? currentAlbum = freezed,
+    Object? currentAlbumId = freezed,
   }) {
     return _then(_value.copyWith(
       galleryList: null == galleryList
@@ -63,10 +63,10 @@ class _$VideoGalleryStateCopyWithImpl<$Res, $Val extends VideoGalleryState>
           ? _value.albumList
           : albumList // ignore: cast_nullable_to_non_nullable
               as List<GalleryAlbum>,
-      currentAlbum: freezed == currentAlbum
-          ? _value.currentAlbum
-          : currentAlbum // ignore: cast_nullable_to_non_nullable
-              as GalleryAlbum?,
+      currentAlbumId: freezed == currentAlbumId
+          ? _value.currentAlbumId
+          : currentAlbumId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -82,7 +82,7 @@ abstract class _$$_VideoGalleryStateCopyWith<$Res>
   $Res call(
       {List<Gallery> galleryList,
       List<GalleryAlbum> albumList,
-      GalleryAlbum? currentAlbum});
+      String? currentAlbumId});
 }
 
 /// @nodoc
@@ -98,7 +98,7 @@ class __$$_VideoGalleryStateCopyWithImpl<$Res>
   $Res call({
     Object? galleryList = null,
     Object? albumList = null,
-    Object? currentAlbum = freezed,
+    Object? currentAlbumId = freezed,
   }) {
     return _then(_$_VideoGalleryState(
       galleryList: null == galleryList
@@ -109,10 +109,10 @@ class __$$_VideoGalleryStateCopyWithImpl<$Res>
           ? _value._albumList
           : albumList // ignore: cast_nullable_to_non_nullable
               as List<GalleryAlbum>,
-      currentAlbum: freezed == currentAlbum
-          ? _value.currentAlbum
-          : currentAlbum // ignore: cast_nullable_to_non_nullable
-              as GalleryAlbum?,
+      currentAlbumId: freezed == currentAlbumId
+          ? _value.currentAlbumId
+          : currentAlbumId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -124,7 +124,7 @@ class _$_VideoGalleryState extends _VideoGalleryState
   const _$_VideoGalleryState(
       {final List<Gallery> galleryList = const [],
       final List<GalleryAlbum> albumList = const [],
-      this.currentAlbum = null})
+      this.currentAlbumId = null})
       : _galleryList = galleryList,
         _albumList = albumList,
         super._();
@@ -147,11 +147,11 @@ class _$_VideoGalleryState extends _VideoGalleryState
 
   @override
   @JsonKey()
-  final GalleryAlbum? currentAlbum;
+  final String? currentAlbumId;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'VideoGalleryState(galleryList: $galleryList, albumList: $albumList, currentAlbum: $currentAlbum)';
+    return 'VideoGalleryState(galleryList: $galleryList, albumList: $albumList, currentAlbumId: $currentAlbumId)';
   }
 
   @override
@@ -161,7 +161,7 @@ class _$_VideoGalleryState extends _VideoGalleryState
       ..add(DiagnosticsProperty('type', 'VideoGalleryState'))
       ..add(DiagnosticsProperty('galleryList', galleryList))
       ..add(DiagnosticsProperty('albumList', albumList))
-      ..add(DiagnosticsProperty('currentAlbum', currentAlbum));
+      ..add(DiagnosticsProperty('currentAlbumId', currentAlbumId));
   }
 
   @override
@@ -173,8 +173,8 @@ class _$_VideoGalleryState extends _VideoGalleryState
                 .equals(other._galleryList, _galleryList) &&
             const DeepCollectionEquality()
                 .equals(other._albumList, _albumList) &&
-            (identical(other.currentAlbum, currentAlbum) ||
-                other.currentAlbum == currentAlbum));
+            (identical(other.currentAlbumId, currentAlbumId) ||
+                other.currentAlbumId == currentAlbumId));
   }
 
   @override
@@ -182,7 +182,7 @@ class _$_VideoGalleryState extends _VideoGalleryState
       runtimeType,
       const DeepCollectionEquality().hash(_galleryList),
       const DeepCollectionEquality().hash(_albumList),
-      currentAlbum);
+      currentAlbumId);
 
   @JsonKey(ignore: true)
   @override
@@ -196,7 +196,7 @@ abstract class _VideoGalleryState extends VideoGalleryState {
   const factory _VideoGalleryState(
       {final List<Gallery> galleryList,
       final List<GalleryAlbum> albumList,
-      final GalleryAlbum? currentAlbum}) = _$_VideoGalleryState;
+      final String? currentAlbumId}) = _$_VideoGalleryState;
   const _VideoGalleryState._() : super._();
 
   @override
@@ -204,7 +204,7 @@ abstract class _VideoGalleryState extends VideoGalleryState {
   @override
   List<GalleryAlbum> get albumList;
   @override
-  GalleryAlbum? get currentAlbum;
+  String? get currentAlbumId;
   @override
   @JsonKey(ignore: true)
   _$$_VideoGalleryStateCopyWith<_$_VideoGalleryState> get copyWith =>

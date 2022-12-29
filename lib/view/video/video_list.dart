@@ -22,15 +22,23 @@ class VideoList extends HookConsumerWidget {
     final videoGalleryNotifier = ref.watch(videoGalleryProvider.notifier);
     final videoGallery = ref.watch(videoGalleryProvider);
 
+    final reloadKey = useState(UniqueKey());
+
     final getGallery = useMemoized(() async {
       await videoGalleryNotifier.getGallery();
       return true;
-    }, [videoGallery.currentAlbum]);
+    }, [videoGallery.currentAlbumId, reloadKey.value]);
 
     final getAlbum = useMemoized(() async {
       await videoGalleryNotifier.getAlbum();
       return true;
-    }, []);
+    }, [reloadKey.value]);
+
+    useOnAppLifecycleStateChange((prevState, nextState) {
+      if (nextState == AppLifecycleState.resumed) {
+        reloadKey.value = UniqueKey();
+      }
+    });
 
     final getGallerySnapshot = useFuture(getGallery);
     final getAlbumSnapshot = useFuture(getAlbum);
