@@ -29,7 +29,7 @@ extension AppRouteExt on AppRoute {
 }
 
 final router = GoRouter(
-  initialLocation: '/video',
+  initialLocation: AppRoute.videoGallery.path,
   routes: AppRoute.values
       .map((e) => GoRoute(
             name: e.name,
