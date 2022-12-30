@@ -12,17 +12,27 @@ import 'package:photo_manager/photo_manager.dart';
 class RepositoryGallery implements IRepositoryGallery {
   @override
   Future<List<GalleryAlbum>> getGalleryAlbums() async {
-    final List<AssetPathEntity> paths = await PhotoManager.getAssetPathList(
-      type: RequestType.video,
-      hasAll: true,
-      onlyAll: false,
-    );
-    final mapAlbum = await Future.wait(paths.map((path) async {
-      if (await path.assetCountAsync > 0) {
-        return _createGalleryAlbum(path);
-      }
-    }));
-    return mapAlbum.whereType<GalleryAlbum>().toList();
+    final PermissionState permissionState =
+        await PhotoManager.requestPermissionExtend();
+    if (permissionState.isAuth) {
+      final List<AssetPathEntity> paths = await PhotoManager.getAssetPathList(
+        type: RequestType.video,
+        hasAll: true,
+        onlyAll: false,
+      );
+
+      final mapAlbum = await Future.wait(paths.map((path) async {
+        if (await path.assetCountAsync > 0) {
+          return _createGalleryAlbum(path);
+        }
+      }));
+      return mapAlbum.whereType<GalleryAlbum>().toList();
+    } else {
+      // Limited(iOS) or Rejected, use `==` for more precise judgements.
+      // You can call `PhotoManager.openSetting()` to open settings for further steps.
+      // PhotoManager.openSetting();
+      throw Exception('not permitted');
+    }
   }
 
   @override
