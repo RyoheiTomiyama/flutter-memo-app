@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:memo_app/routes.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 const brandColor = MaterialColor(0xFF397A8D, <int, Color>{
   50: Color(0xFFE7EFF1),
@@ -46,6 +47,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    PhotoManager.clearFileCache();
+
     return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
