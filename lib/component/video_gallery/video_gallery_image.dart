@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,15 +20,21 @@ class VideoGalleryImage extends HookConsumerWidget {
     final snapshot = useFuture(getThumbnail);
 
     if (snapshot.hasData && snapshot.data != null) {
-      return SizedBox(
+      return Container(
         width: 200,
         height: 200,
-        child: Image.memory(
-          snapshot.data!,
-          width: 200,
-          height: 200,
-          fit: BoxFit.cover,
-          // color: Colors.amber,
+        // child: Image.memory(
+        //   snapshot.data!,
+        //   width: 200,
+        //   height: 200,
+        //   fit: BoxFit.cover,
+        //   // color: Colors.amber,
+        // ),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: MemoryImage(snapshot.data!, scale: 0.5),
+          ),
         ),
       );
     }
