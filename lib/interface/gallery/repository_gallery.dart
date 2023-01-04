@@ -67,10 +67,7 @@ class RepositoryGallery implements IRepositoryGallery {
   }
 
   @override
-  Future<Uint8List> getThumbnail(
-    Gallery gallery, {
-    Size size = const Size(200, 200),
-  }) async {
+  Future<Uint8List> getThumbnail(Gallery gallery, {required Size size}) async {
     final asset = await AssetEntity.fromId(gallery.id);
     if (asset == null) {
       throw Exception('not found file');

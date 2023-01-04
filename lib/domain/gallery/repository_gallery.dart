@@ -11,7 +11,7 @@ abstract class IRepositoryGallery {
 
   Future<List<Gallery>> getGalleries(GalleryAlbum? album);
 
-  Future<Uint8List> getThumbnail(Gallery gallery, {Size size});
+  Future<Uint8List> getThumbnail(Gallery gallery, {required Size size});
 
   Future<Gallery> getGallery({required String id});
 
